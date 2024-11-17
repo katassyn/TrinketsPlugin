@@ -8,9 +8,9 @@ A Minecraft plugin that introduces a customizable trinket system with the `/trin
 
 ### **/trinkets Command**
 - Opens a GUI with three menu options:
-  I. **Accessories** (currently functional).
-  II. **Jewels** (coming soon).
-  III. **Runes** (coming soon).
+  1. **Accessories** (currently functional).
+  2. **Jewels** (coming soon).
+  3. **Runes** (coming soon).
 
 ### **Accessories**
 - Equip accessories by right-clicking (RMB) while holding the item in hand.
