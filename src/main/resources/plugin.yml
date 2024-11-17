@@ -1,0 +1,13 @@
+name: TrinketsPlugin
+version: '${project.version}'
+main: com.maks.trinketsplugin.TrinketsPlugin
+api-version: '1.20'
+commands:
+  trinkets:
+    description: Opens the Trinkets menu.
+    usage: /trinkets
+  resetattributes:
+    description: Removes all attribute modifiers from a player.
+    usage: /resetattributes [player]
+#    permission: trinkets.resetattributes
+#    permission-message: Nie masz uprawnień do użycia tej komendy.

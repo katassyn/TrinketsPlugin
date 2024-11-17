@@ -1,0 +1,14 @@
+com\maks\trinketsplugin\PlayerQuitListener.class
+com\maks\trinketsplugin\ResetAttributesCommand.class
+com\maks\trinketsplugin\PlayerData.class
+com\maks\trinketsplugin\TrinketsPlugin.class
+com\maks\trinketsplugin\PlayerJoinListener.class
+com\maks\trinketsplugin\TrinketsGUI.class
+com\maks\trinketsplugin\TrinketsCommand.class
+com\maks\trinketsplugin\PlayerInteractListener.class
+com\maks\trinketsplugin\RestrictedAccessory.class
+com\maks\trinketsplugin\ItemSerializationUtils.class
+com\maks\trinketsplugin\DatabaseManager.class
+com\maks\trinketsplugin\ResetAttributesCommand$1.class
+com\maks\trinketsplugin\InventoryClickListener.class
+com\maks\trinketsplugin\AccessoryType.class

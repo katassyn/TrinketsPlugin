@@ -1,0 +1,26 @@
+message: "You must be at least level %level% to use this item!"
+items:
+  fyrgons_ring_of_fire:
+    id: TNT_MINECART
+    display_name: '&6[ III ] &l&cFYRGON`S RING OF FIRE'
+    lv: 100
+  grimmags_flaming_wrath_bloodshed:
+    id: furnace_minecart
+    display_name: "&6[ III ] &eGrimmag`s Flaming Wrath"
+    lv: 50
+  grimmags_flaming_wrath_bloodshed+1:
+    id: furnace_minecart
+    display_name: "&6[ III ] &eGrimmag`s Flaming Wrath"
+    lv: 50
+  grimmags_flaming_wrath_bloodshed+2:
+    id: furnace_minecart
+    display_name: "&6[ III ] &eGrimmag`s Flaming Wrath"
+    lv: 50
+  grimmags_flaming_wrath_bloodshed+3:
+    id: furnace_minecart
+    display_name: "&6[ III ] &eGrimmag`s Flaming Wrath"
+    lv: 50
+  grimmags_flaming_wrath_bloodshed+4:
+    id: furnace_minecart
+    display_name: "&6[ III ] &eGrimmag`s Flaming Wrath"
+    lv: 50
