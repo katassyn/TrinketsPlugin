@@ -28,9 +28,24 @@ public class TrinketsGUI {
 
     public static void openAccessoriesMenu(Player player) {
         TrinketsPlugin.getInstance().getDatabaseManager().loadPlayerData(player.getUniqueId(), data -> {
-            Inventory gui = Bukkit.createInventory(null, 9, "Accessories");
+            int inventorySize = 9; // Start with size 9
 
-            // Wyświetl założone akcesoria
+            // Calculate required inventory size based on the highest slot number
+            int highestSlot = 0;
+            for (AccessoryType type : AccessoryType.values()) {
+                if (type.getSlot() > highestSlot) {
+                    highestSlot = type.getSlot();
+                }
+            }
+
+            // Adjust inventory size to fit all slots (must be a multiple of 9)
+            while (inventorySize <= highestSlot) {
+                inventorySize += 9;
+            }
+
+            Inventory gui = Bukkit.createInventory(null, inventorySize, "Accessories");
+
+            // Display equipped accessories
             for (AccessoryType type : AccessoryType.values()) {
                 ItemStack item = data.getAccessory(type);
                 if (item != null) {
@@ -40,12 +55,13 @@ public class TrinketsGUI {
                 }
             }
 
-            // Otwórz ekwipunek na wątku głównym
+            // Open the inventory on the main thread
             Bukkit.getScheduler().runTask(TrinketsPlugin.getInstance(), () -> {
                 player.openInventory(gui);
             });
         });
     }
+
 
 
     private static ItemStack createMenuItem(Material material, String name, String... lore) {

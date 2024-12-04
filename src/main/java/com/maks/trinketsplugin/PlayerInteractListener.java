@@ -30,13 +30,13 @@ public class PlayerInteractListener implements Listener {
     }
 
     private boolean isAccessoryItem(ItemStack item) {
-        // Sprawdź, czy przedmiot jest w restrictedAccessories
+        // Check if the item matches any restricted accessories
         for (RestrictedAccessory accessory : TrinketsPlugin.getInstance().getDatabaseManager().getRestrictedAccessories()) {
             if (accessory.matches(item)) {
                 return true;
             }
         }
-        // Jeśli nie jest ograniczony, sprawdź, czy materiał pasuje do AccessoryType
+        // Check if the material matches any AccessoryType
         Material itemMaterial = item.getType();
         for (AccessoryType type : AccessoryType.values()) {
             if (type.getMaterial() == itemMaterial) {
@@ -45,6 +45,7 @@ public class PlayerInteractListener implements Listener {
         }
         return false;
     }
+
 
 
 

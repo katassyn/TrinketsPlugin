@@ -11,13 +11,12 @@ public class PlayerJoinListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        // Wczytaj dane gracza i zastosuj atrybuty
-        TrinketsPlugin.getInstance().getDatabaseManager().loadPlayerData(player.getUniqueId(), data -> {
-            // Usuń istniejące atrybuty, aby zapobiec kumulacji
-            data.removeAllAttributes(player);
+        // Load player data synchronously
+        TrinketsPlugin.getInstance().getDatabaseManager().loadPlayerDataSync(player.getUniqueId());
 
-            // Zastosuj atrybuty z założonych akcesoriów
-            data.applyAllAttributes(player);
-        });
+        // Get the data and apply attributes
+        PlayerData data = TrinketsPlugin.getInstance().getDatabaseManager().getPlayerData(player.getUniqueId());
+        data.removeAllAttributes(player);
+        data.applyAllAttributes(player);
     }
 }

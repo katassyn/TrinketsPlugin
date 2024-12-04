@@ -18,20 +18,21 @@ public class TrinketsPlugin extends JavaPlugin {
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
-        // Inicjalizacja konfiguracji z pliku blokady.yml
+
+        // Initialize configuration from blokady.yml
         blokadyFile = new File(getDataFolder(), "blokady.yml");
         if (!blokadyFile.exists()) {
             saveResource("blokady.yml", false);
         }
         blokadyConfig = YamlConfiguration.loadConfiguration(blokadyFile);
 
-        // Inicjalizacja DatabaseManager
+        // Initialize DatabaseManager
         databaseManager = new DatabaseManager();
 
-        // Wczytaj konfigurację
+        // Load configuration
         databaseManager.loadConfig();
 
-        // Otwórz połączenie z bazą danych
+        // Open database connection
         databaseManager.openConnection();
 
         // Register commands
@@ -43,8 +44,9 @@ public class TrinketsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerDamageListener(), this); // Register the new listener
 
-        // Wczytaj dane dla już zalogowanych graczy
+        // Load data for already logged-in players
         for (Player player : Bukkit.getOnlinePlayers()) {
             getDatabaseManager().loadPlayerData(player.getUniqueId(), data -> {
                 data.removeAllAttributes(player);
@@ -52,9 +54,6 @@ public class TrinketsPlugin extends JavaPlugin {
             });
         }
     }
-
-
-
 
     @Override
     public void onDisable() {
