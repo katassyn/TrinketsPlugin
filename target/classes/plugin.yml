@@ -9,5 +9,8 @@ commands:
   resetattributes:
     description: Removes all attribute modifiers from a player.
     usage: /resetattributes [player]
+  soul:
+    description: "Show info about boss souls"
+    usage: /soul
 #    permission: trinkets.resetattributes
 #    permission-message: Nie masz uprawnień do użycia tej komendy.

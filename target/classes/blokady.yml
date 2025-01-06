@@ -24,3 +24,43 @@ items:
     id: furnace_minecart
     display_name: "&6[ III ] &eGrimmag`s Flaming Wrath"
     lv: 50
+  q1_soul:
+    id: DRAGON_BREATH
+    display_name: '&c☀ Grimmag’s Burning Soul'
+    lv: 75
+  q2_soul:
+    id: DRAGON_BREATH
+    display_name: '&2☠ Arachna’s Venomous Soul'
+    lv: 75
+  q3_soul:
+    id: DRAGON_BREATH
+    display_name: '&b❄ King Heredur’s Frostbound Soul'
+    lv: 75
+  q4_soul:
+    id: DRAGON_BREATH
+    display_name: '&a🌿 Bearach’s Wildheart Soul'
+    lv: 75
+  q5_soul:
+    id: DRAGON_BREATH
+    display_name: '&5⚙ Khalys’s Shadowbound Soul'
+    lv: 75
+  q6_soul:
+    id: DRAGON_BREATH
+    display_name: '&8⚔ Mortis’s Unchained Soul'
+    lv: 75
+  q7_soul:
+    id: DRAGON_BREATH
+    display_name: '&6🔥 Herald’s Molten Soul'
+    lv: 75
+  q8_soul:
+    id: DRAGON_BREATH
+    display_name: '&b🌨 Sigrismar’s Blizzard Soul'
+    lv: 75
+  q9_soul:
+    id: DRAGON_BREATH
+    display_name: '&2🪨 Medusa’s Petrifying Soul'
+    lv: 75
+  q10_soul:
+    id: DRAGON_BREATH
+    display_name: '&3🐍 Gorga’s Abyssal Soul'
+    lv: 75

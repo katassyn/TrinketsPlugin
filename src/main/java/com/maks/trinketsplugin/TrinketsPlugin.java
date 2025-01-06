@@ -1,5 +1,6 @@
 package com.maks.trinketsplugin;
 
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -45,7 +46,16 @@ public class TrinketsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerDamageListener(), this); // Register the new listener
-
+        getServer().getPluginManager().registerEvents(new Q1SoulEffect(this), this);
+        getServer().getPluginManager().registerEvents(new Q2SoulEffect(this), this);
+        getServer().getPluginManager().registerEvents(new Q3SoulEffect(this), this);
+        getServer().getPluginManager().registerEvents(new Q4SoulEffect(this), this);
+        getServer().getPluginManager().registerEvents(new Q5SoulEffect(this), this);
+        getServer().getPluginManager().registerEvents(new Q6SoulEffect(this), this);
+        getServer().getPluginManager().registerEvents(new Q7SoulEffect(this), this);
+        getServer().getPluginManager().registerEvents(new Q8SoulEffect(this), this);
+        getServer().getPluginManager().registerEvents(new Q9SoulEffect(this), this);
+        getServer().getPluginManager().registerEvents(new Q10SoulEffect(this), this);
         // Load data for already logged-in players
         for (Player player : Bukkit.getOnlinePlayers()) {
             getDatabaseManager().loadPlayerData(player.getUniqueId(), data -> {
@@ -53,6 +63,8 @@ public class TrinketsPlugin extends JavaPlugin {
                 data.applyAllAttributes(player);
             });
         }
+        getCommand("soul").setExecutor(new SoulCommand());
+
     }
 
     @Override
@@ -73,5 +85,10 @@ public class TrinketsPlugin extends JavaPlugin {
 
     public DatabaseManager getDatabaseManager() {
         return databaseManager;
+    }
+    private static Economy econ;
+
+    public static Economy getEconomy() {
+        return econ;
     }
 }
