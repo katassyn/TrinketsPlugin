@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -15,6 +16,7 @@ public class TrinketsPlugin extends JavaPlugin {
     private File blokadyFile;
     private FileConfiguration blokadyConfig;
 
+    private static Economy econ = null;
     @Override
     public void onEnable() {
         instance = this;
@@ -39,7 +41,13 @@ public class TrinketsPlugin extends JavaPlugin {
         // Register commands
         getCommand("trinkets").setExecutor(new TrinketsCommand());
         getCommand("resetattributes").setExecutor(new ResetAttributesCommand());
+        if (!setupEconomy()) {
+            getLogger().severe("Vault dependency not found! Disabling plugin.");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
 
+        getLogger().info("Vault hooked successfully!");
         // Register event listeners
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
         getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
@@ -86,7 +94,17 @@ public class TrinketsPlugin extends JavaPlugin {
     public DatabaseManager getDatabaseManager() {
         return databaseManager;
     }
-    private static Economy econ;
+    private boolean setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return false;
+        }
+        econ = rsp.getProvider();
+        return econ != null;
+    }
 
     public static Economy getEconomy() {
         return econ;
