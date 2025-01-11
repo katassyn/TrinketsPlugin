@@ -179,24 +179,46 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Metoda odpowiedzialna za założenie akcesorium przez gracza.
+     * Poniżej znajduje się dodany fragment blokujący wszystkie sloty poza RING_1 i RING_2
+     * dopóki gracz nie osiągnie minimalnego poziomu 50.
+     */
     public void equipAccessory(Player player, ItemStack item) {
         UUID uuid = player.getUniqueId();
 
         loadPlayerData(uuid, data -> {
 
-            // Find the accessory type
+            // Znajdź typ akcesorium
             AccessoryType type = getAccessoryType(item);
             if (type == null) {
                 player.sendMessage("Cannot determine accessory type.");
                 return;
             }
 
+            // -----------------------------
+            // DODANE SPRAWDZENIE POZIOMU:
+            // Wymagany poziom dla pozostałych slotów
+            int minLevelForOtherSlots = 50;
+            int playerLevel = player.getLevel();
+
+            // Jeśli slot NIE jest RING_1 i NIE jest RING_2, to blokujemy do lv 50
+            if (type != AccessoryType.RING_1 && type != AccessoryType.RING_2) {
+                if (playerLevel < minLevelForOtherSlots) {
+                    player.sendMessage(ChatColor.RED + "You must be at least level "
+                            + minLevelForOtherSlots
+                            + " to use this accessory slot!");
+                    return;
+                }
+            }
+            // -----------------------------
+
             if (data.getAccessory(type) != null) {
                 player.sendMessage("You have already equipped an accessory in this slot!");
                 return;
             }
 
-            // Check if item is in restrictedAccessories
+            // Sprawdź, czy item jest na liście restrictedAccessories
             RestrictedAccessory restrictedAccessory = null;
             for (RestrictedAccessory accessory : restrictedAccessories) {
                 if (accessory.matches(item)) {
@@ -205,11 +227,9 @@ public class DatabaseManager {
                 }
             }
 
-            // If item is restricted, check player's level
+            // Jeśli item jest restricted, sprawdź poziom gracza
             if (restrictedAccessory != null) {
-                int playerLevel = player.getLevel();
                 int requiredLevel = restrictedAccessory.getRequiredLevel();
-
                 if (playerLevel < requiredLevel) {
                     String message = levelMessage.replace("%level%", String.valueOf(requiredLevel));
                     player.sendMessage(message);
@@ -217,21 +237,23 @@ public class DatabaseManager {
                 }
             }
 
+            // Ustaw akcesorium w PlayerData
             data.setAccessory(type, item);
 
-            // Apply attributes from the item
+            // Zastosuj atrybuty
             data.applyAttributes(player, item, type);
 
+            // Zapisz PlayerData w bazie
             savePlayerData(uuid, data);
 
-            // Remove the item from the player's hand
+            // Usuwamy przedmiot z ręki gracza
             player.getInventory().removeItem(item);
 
-            // Send message to the player
+            // Wyświetl informację o założeniu
             String accessoryName = (restrictedAccessory != null) ? restrictedAccessory.getDisplayName() : type.getDisplayName();
             player.sendMessage("You have equipped the " + accessoryName + "!");
 
-            // Send block stats info if applicable
+            // Pokaż info o block stats, jeśli istnieją
             sendBlockStatsInfo(player, data, item, true);
         });
     }
@@ -249,18 +271,18 @@ public class DatabaseManager {
 
             data.removeAccessory(type);
 
-            // Remove attributes
+            // Usuń atrybuty
             data.removeAttributes(player, type);
 
             savePlayerData(uuid, data);
 
-            // Add the item back to the player's inventory
+            // Zwróć przedmiot graczowi
             player.getInventory().addItem(item);
 
-            // Send message to the player
+            // Wiadomość
             player.sendMessage("You have unequipped the " + type.getDisplayName() + ".");
 
-            // Send block stats info if applicable
+            // Pokaż info o block stats
             sendBlockStatsInfo(player, data, item, false);
         });
     }
@@ -278,17 +300,17 @@ public class DatabaseManager {
         return restrictedAccessories;
     }
 
-    // Method to get PlayerData synchronously
+    // Metoda do pobrania PlayerData synchronicznie
     public PlayerData getPlayerData(UUID playerUUID) {
         return playerDataMap.get(playerUUID);
     }
 
-    // Method to remove PlayerData when a player quits
+    // Metoda do usunięcia PlayerData po wyjściu gracza
     public void removePlayerData(UUID playerUUID) {
         playerDataMap.remove(playerUUID);
     }
 
-    // Method to send block stats info to the player
+    // Metoda wyświetlająca info o block stats w zależności od akcji
     private void sendBlockStatsInfo(Player player, PlayerData data, ItemStack item, boolean isEquip) {
         int itemBlockChance = parseBlockChance(item);
         int itemBlockStrength = parseBlockStrength(item);
@@ -308,7 +330,7 @@ public class DatabaseManager {
         }
     }
 
-    // Methods to parse block chance and block strength from an item
+    // Parsowanie Block Chance
     private int parseBlockChance(ItemStack item) {
         int blockChance = 0;
         ItemMeta meta = item.getItemMeta();
@@ -318,16 +340,13 @@ public class DatabaseManager {
                 // Compile a case-insensitive pattern to match "Block Chance: X%"
                 Pattern pattern = Pattern.compile("(?i)block chance:\\s*(\\d+)%?");
                 for (String line : lore) {
-                    // Strip color codes from the line
                     String strippedLine = ChatColor.stripColor(line);
                     if (strippedLine != null) {
-                        // Match the pattern against the stripped line
                         Matcher matcher = pattern.matcher(strippedLine);
                         if (matcher.find()) {
-                            String percentageString = matcher.group(1); // Extract the number
+                            String percentageString = matcher.group(1);
                             try {
                                 int chance = Integer.parseInt(percentageString);
-                                // Clamp the value between 0 and 100
                                 chance = Math.max(0, Math.min(100, chance));
                                 blockChance += chance;
                             } catch (NumberFormatException e) {
@@ -341,6 +360,7 @@ public class DatabaseManager {
         return blockChance;
     }
 
+    // Parsowanie Block Strength
     private int parseBlockStrength(ItemStack item) {
         int blockStrength = 0;
         ItemMeta meta = item.getItemMeta();
@@ -350,16 +370,13 @@ public class DatabaseManager {
                 // Zaktualizowane wyrażenie regularne, aby pasowało do "Block Strength: +X%"
                 Pattern pattern = Pattern.compile("(?i)block strength:\\s*\\+\\s*(\\d+)%?");
                 for (String line : lore) {
-                    // Usuń kody kolorów z linii
                     String strippedLine = ChatColor.stripColor(line);
                     if (strippedLine != null) {
-                        // Dopasuj wyrażenie regularne do linii
                         Matcher matcher = pattern.matcher(strippedLine);
                         if (matcher.find()) {
-                            String percentageString = matcher.group(1); // Wyodrębnij liczbę
+                            String percentageString = matcher.group(1);
                             try {
                                 int strength = Integer.parseInt(percentageString);
-                                // Ogranicz wartość między 0 a 100
                                 strength = Math.max(0, Math.min(100, strength));
                                 blockStrength += strength;
                             } catch (NumberFormatException e) {
@@ -372,5 +389,4 @@ public class DatabaseManager {
         }
         return blockStrength;
     }
-
 }
