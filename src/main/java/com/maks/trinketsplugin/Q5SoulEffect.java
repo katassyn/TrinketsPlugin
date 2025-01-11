@@ -1,11 +1,8 @@
 package com.maks.trinketsplugin;
 
-import com.maks.trinketsplugin.TrinketsPlugin;
-import com.maks.trinketsplugin.AccessoryType;
-import com.maks.trinketsplugin.PlayerData;
-
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Entity;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,10 +17,9 @@ public class Q5SoulEffect implements Listener {
 
     private final TrinketsPlugin plugin;
 
-    // Kiedy można ponownie zrobić "evade"? <victimUUID, nextUsableTime>
+    // Evade cd
     private final Map<UUID, Long> evadeCooldown = new HashMap<>();
-    // Flaga na "następny atak = +300% dmg"
-    // Wystarczy np. <playerUUID, Boolean> lub <playerUUID, Long> z czasem.
+    // Flaga na +300% dmg
     private final Map<UUID, Boolean> nextCritFlag = new HashMap<>();
 
     public Q5SoulEffect(TrinketsPlugin plugin) {
@@ -42,40 +38,42 @@ public class Q5SoulEffect implements Listener {
         return name.contains("Khalys’s Shadowbound Soul");
     }
 
+    // Ofiara = Evade
     @EventHandler
-    public void onEntityDamageVictim(EntityDamageByEntityEvent event) {
-        // Evade => victim side
-        if (!(event.getEntity() instanceof Player)) return;
-        Player victim = (Player) event.getEntity();
+    public void onVictimDamage(EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof Player victim)) return;
         if (!hasQ5SoulEquipped(victim)) return;
 
         long now = System.currentTimeMillis();
         long nextUse = evadeCooldown.getOrDefault(victim.getUniqueId(), 0L);
+
         if (now >= nextUse) {
             // Evade
             event.setDamage(0);
-            victim.sendMessage(ChatColor.DARK_PURPLE + "[Q5] You have evaded all damage! Your next attack deals +300%.");
-
-            // Ustaw cooldown 30s
             evadeCooldown.put(victim.getUniqueId(), now + 30_000);
 
-            // Ustaw flagę nextCrit
+            // Następny atak +300%
             nextCritFlag.put(victim.getUniqueId(), true);
+
+            // Efekty wizualne
+            victim.getWorld().playSound(victim.getLocation(), Sound.ITEM_SHIELD_BLOCK, 1f, 1.2f);
+            victim.getWorld().spawnParticle(Particle.CRIT_MAGIC, victim.getLocation().add(0,1,0), 30, 0.5, 1, 0.5, 0.2);
         }
     }
 
+    // Atakujący = +300%
     @EventHandler
-    public void onEntityDamageAttacker(EntityDamageByEntityEvent event) {
-        // +300% => attacker side
-        if (!(event.getDamager() instanceof Player)) return;
-        Player damager = (Player) event.getDamager();
+    public void onAttackerDamage(EntityDamageByEntityEvent event) {
+        if (!(event.getDamager() instanceof Player damager)) return;
         if (!hasQ5SoulEquipped(damager)) return;
 
         if (nextCritFlag.getOrDefault(damager.getUniqueId(), false)) {
-            double dmg = event.getDamage();
-            event.setDamage(dmg * 4.0); // total x4 => +300%
-            damager.sendMessage(ChatColor.DARK_PURPLE + "[Q5] Your attack dealt +300% damage!");
+            event.setDamage(event.getDamage() * 4.0); // +300% => *4
             nextCritFlag.put(damager.getUniqueId(), false);
+
+            // Efekty
+            damager.getWorld().playSound(damager.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 0.8f);
+            damager.getWorld().spawnParticle(Particle.CRIT, damager.getLocation().add(0,1,0), 20, 0.3, 0.5, 0.3, 0.1);
         }
     }
 }

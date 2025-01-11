@@ -1,10 +1,7 @@
 package com.maks.trinketsplugin;
 
-import com.maks.trinketsplugin.TrinketsPlugin;
-import com.maks.trinketsplugin.AccessoryType;
-import com.maks.trinketsplugin.PlayerData;
-
 import org.bukkit.ChatColor;
+import org.bukkit.Particle;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -34,20 +31,24 @@ public class Q7SoulEffect implements Listener {
 
     @EventHandler
     public void onVictimDamage(EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof Player)) return;
-        Player victim = (Player) event.getEntity();
+        if (!(event.getEntity() instanceof Player victim)) return;
         if (!hasQ7SoulEquipped(victim)) return;
 
-        double origDmg = event.getDamage();
-        double reduced = origDmg * 0.8; // 20% less
+        double originalDmg = event.getDamage();
+        // Zmniejszamy o 20%
+        double reduced = originalDmg * 0.8;
         event.setDamage(reduced);
 
-        // reflect 20% of *incoming damage*
-        double reflect = origDmg * 0.2;
-        if (event.getDamager() instanceof LivingEntity) {
-            LivingEntity attacker = (LivingEntity) event.getDamager();
+        // Reflect 20% do atakującego
+        double reflect = originalDmg * 0.2;
+        if (event.getDamager() instanceof LivingEntity attacker) {
             attacker.damage(reflect, victim);
-            victim.sendMessage(ChatColor.RED + "[Q7] You reflected 20% damage back to the attacker!");
+
+            // Usuwamy dźwięk, zostawiamy particle
+            // victim.getWorld().playSound(victim.getLocation(), Sound.ITEM_SHIELD_BLOCK, 1f, 0.7f);
+            victim.getWorld().spawnParticle(Particle.LAVA,
+                    victim.getLocation().add(0,1,0),
+                    5, 0.5, 0.5, 0.5, 0.01);
         }
     }
 }

@@ -1,24 +1,27 @@
 package com.maks.trinketsplugin;
 
-import com.maks.trinketsplugin.TrinketsPlugin;
-import com.maks.trinketsplugin.AccessoryType;
-import com.maks.trinketsplugin.PlayerData;
-
 import org.bukkit.ChatColor;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Random;
+import java.util.*;
 
 public class Q3SoulEffect implements Listener {
 
     private final TrinketsPlugin plugin;
+
+    // Przechowujemy oryginalną prędkość, by móc ją potem przywrócić
+    // Key: UUID gracza, Value: poprzednia prędkość
+    private final Map<UUID, Double> originalSpeeds = new HashMap<>();
 
     public Q3SoulEffect(TrinketsPlugin plugin) {
         this.plugin = plugin;
@@ -38,29 +41,49 @@ public class Q3SoulEffect implements Listener {
 
     @EventHandler
     public void onEntityDamage(EntityDamageByEntityEvent event) {
-        // Check if victim is a player
-        if (!(event.getEntity() instanceof Player)) return;
-        Player victim = (Player) event.getEntity();
-
+        if (!(event.getEntity() instanceof Player victim)) return;
         if (!hasQ3SoulEquipped(victim)) return;
 
-        Random r = new Random();
-        if (r.nextInt(100) < 10) { // 10% chance
-            double originalDamage = event.getDamage();
-            double newDamage = originalDamage * 0.5; // block 50%
-            event.setDamage(newDamage);
+        // 10% szansy na zablokowanie 50% dmg
+        if (new Random().nextInt(100) < 10) {
+            event.setDamage(event.getDamage() * 0.5);
 
-            victim.sendMessage(ChatColor.AQUA + "[Q3] You have blocked 50% of the incoming damage!");
-
-            // Now slow all entities in 10-block radius by ~20%
+            // AoE slow w promieniu 10 bloków
             for (Entity near : victim.getNearbyEntities(10, 10, 10)) {
-                if (near instanceof Player) {
-                    Player p = (Player) near;
-                    p.sendMessage(ChatColor.BLUE + "[Q3] You've been slowed by Heredur’s frost!");
-                    p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 0));
-                    // Amplifier 0 ~ 15% slow, if you want exactly 20%, you might need amplifier 1 or test.
+                if (near instanceof Player nearPlayer) {
+                    applyTemporarySlow(nearPlayer, 0.25, 60); // 80% speed, na 60 ticków (3s)
                 }
             }
+
+            // Efekt wizualny
+            victim.getWorld().playSound(victim.getLocation(), Sound.BLOCK_SNOW_BREAK, 1f, 1f);
+            victim.getWorld().spawnParticle(Particle.SNOWFLAKE, victim.getLocation().add(0,1,0), 30, 1, 1, 1, 0.1);
         }
+    }
+
+    private void applyTemporarySlow(Player player, double multiplier, int durationTicks) {
+        AttributeInstance attr = player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
+        if (attr == null) return;
+
+        // Jeśli nie mamy zapisanego oryginalnego speeda, zapisz
+        originalSpeeds.putIfAbsent(player.getUniqueId(), attr.getBaseValue());
+
+        // Ustaw nową (zmniejszoną) wartość
+        double newSpeed = originalSpeeds.get(player.getUniqueId()) * multiplier;
+        attr.setBaseValue(newSpeed);
+
+        // Po upływie 'durationTicks' przywróć oryginalną prędkość
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Double oldSpeed = originalSpeeds.remove(player.getUniqueId());
+                if (oldSpeed != null) {
+                    AttributeInstance a = player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
+                    if (a != null) {
+                        a.setBaseValue(oldSpeed);
+                    }
+                }
+            }
+        }.runTaskLater(plugin, durationTicks);
     }
 }

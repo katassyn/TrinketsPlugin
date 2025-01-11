@@ -1,10 +1,9 @@
 package com.maks.trinketsplugin;
 
-import com.maks.trinketsplugin.TrinketsPlugin;
-import com.maks.trinketsplugin.AccessoryType;
-import com.maks.trinketsplugin.PlayerData;
-
 import org.bukkit.ChatColor;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -38,20 +37,16 @@ public class Q2SoulEffect implements Listener {
 
     @EventHandler
     public void onItemPickup(EntityPickupItemEvent event) {
-        if (!(event.getEntity() instanceof Player)) return;
-        Player player = (Player) event.getEntity();
+        if (!(event.getEntity() instanceof Player player)) return;
         if (!hasQ2SoulEquipped(player)) return;
 
         ItemStack stack = event.getItem().getItemStack();
-        // Sprawdzamy lore (o ile istnieje)
         if (!stack.hasItemMeta() || !stack.getItemMeta().hasLore()) {
-            return;  // brak lore => nic nie robimy
+            return;
         }
 
         boolean foundRare = false;
-        // Pobierz lore i przeleć każdą linię
         for (String line : stack.getItemMeta().getLore()) {
-            // Usuwamy kody kolorów i zmieniamy na małe litery
             String cleaned = ChatColor.stripColor(line).toLowerCase();
             if (cleaned.contains("unique") || cleaned.contains("mythic")) {
                 foundRare = true;
@@ -59,33 +54,29 @@ public class Q2SoulEffect implements Listener {
             }
         }
 
-        // Jeśli w lore znaleźliśmy "unique" lub "mythic" => 10% szansy na duplikację
         if (foundRare) {
             Random r = new Random();
             if (r.nextInt(100) < 10) { // 10% chance
-                player.sendMessage(ChatColor.DARK_GREEN + "[Q2] You duplicated a unique/mythic item!");
+                // Duplikacja
                 player.getInventory().addItem(stack.clone());
+                // Drobny efekt wizualny:
+                player.getWorld().playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 2f);
+                player.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, player.getLocation().add(0,1,0), 10, 0.5, 0.5, 0.5, 0.1);
             }
         }
     }
 
-
-    /**
-     * For each mob kill -> +10k $
-     */
     @EventHandler
     public void onMobKill(EntityDeathEvent event) {
-        // event.getEntity() is a LivingEntity
-        LivingEntity e = event.getEntity();
-        // Check if it's a Monster
-        if (!(e instanceof Monster)) return;
+        LivingEntity entity = event.getEntity();
+        if (!(entity instanceof Monster)) return;
 
-        Player killer = e.getKiller();  // <-- poprawne wywołanie (LivingEntity ma getKiller())
+        Player killer = entity.getKiller();
         if (killer == null) return;
         if (!hasQ2SoulEquipped(killer)) return;
 
-        // +10k$
         TrinketsPlugin.getEconomy().depositPlayer(killer, 10000);
-        killer.sendMessage(ChatColor.GREEN + "[Q2] You received $10,000 for killing a mob!");
+        // Możesz tu zostawić krótką notkę, albo usunąć całkowicie:
+        // killer.sendMessage(ChatColor.GREEN + "[Q2] +$10,000");
     }
 }

@@ -1,10 +1,8 @@
 package com.maks.trinketsplugin;
 
-import com.maks.trinketsplugin.TrinketsPlugin;
-import com.maks.trinketsplugin.AccessoryType;
-import com.maks.trinketsplugin.PlayerData;
-
 import org.bukkit.ChatColor;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
@@ -22,8 +20,6 @@ import java.util.UUID;
 public class Q1SoulEffect implements Listener {
 
     private final TrinketsPlugin plugin;
-
-    // Separate cooldowns for hitting mob vs hitting player
     private final Map<UUID, Long> cooldownMob = new HashMap<>();
     private final Map<UUID, Long> cooldownPlayer = new HashMap<>();
 
@@ -45,9 +41,7 @@ public class Q1SoulEffect implements Listener {
 
     @EventHandler
     public void onEntityDamage(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player)) return;
-        Player damager = (Player) event.getDamager();
-
+        if (!(event.getDamager() instanceof Player damager)) return;
         if (!hasQ1SoulEquipped(damager)) return;
 
         Entity target = event.getEntity();
@@ -57,13 +51,15 @@ public class Q1SoulEffect implements Listener {
         if (target instanceof Monster || (target instanceof LivingEntity && !(target instanceof Player))) {
             Long nextUse = cooldownMob.getOrDefault(damager.getUniqueId(), 0L);
             if (now < nextUse) {
-                return; // still on cooldown
+                return; // cooldown wciąż trwa
             }
-            cooldownMob.put(damager.getUniqueId(), now + 15_000); // 15s
-            damager.sendMessage(ChatColor.RED + "[Q1] You ignited the mob for 5 seconds (1000 dmg/s)!");
+            cooldownMob.put(damager.getUniqueId(), now + 15_000);
+
+            // Efekt wizualny uderzenia ogniem:
+            target.getWorld().playSound(target.getLocation(), Sound.ITEM_FIRECHARGE_USE, 1f, 1.2f);
+            target.getWorld().spawnParticle(Particle.FLAME, target.getLocation().add(0,1,0), 20, 0.5, 1, 0.5, 0.01);
 
             LivingEntity mob = (LivingEntity) target;
-            // 5-second schedule
             new BukkitRunnable() {
                 int count = 0;
                 @Override
@@ -75,19 +71,20 @@ public class Q1SoulEffect implements Listener {
                     mob.damage(1000, damager);
                     count++;
                 }
-            }.runTaskTimer(plugin, 20, 20); // Start after 1s, repeat every 1s
+            }.runTaskTimer(plugin, 20, 20);
         }
-
         // Player
-        else if (target instanceof Player) {
+        else if (target instanceof Player pTarget) {
             Long nextUse = cooldownPlayer.getOrDefault(damager.getUniqueId(), 0L);
             if (now < nextUse) {
                 return;
             }
             cooldownPlayer.put(damager.getUniqueId(), now + 15_000);
-            damager.sendMessage(ChatColor.RED + "[Q1] You ignited the player for 3 seconds (50 dmg/s)!");
 
-            Player pTarget = (Player) target;
+            // Efekt wizualny uderzenia ogniem:
+            pTarget.getWorld().playSound(pTarget.getLocation(), Sound.ITEM_FIRECHARGE_USE, 1f, 1f);
+            pTarget.getWorld().spawnParticle(Particle.FLAME, pTarget.getLocation().add(0,1,0), 20, 0.5, 1, 0.5, 0.01);
+
             new BukkitRunnable() {
                 int count = 0;
                 @Override

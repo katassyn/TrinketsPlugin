@@ -1,21 +1,16 @@
 package com.maks.trinketsplugin;
 
-import com.maks.trinketsplugin.TrinketsPlugin;
-import com.maks.trinketsplugin.AccessoryType;
-import com.maks.trinketsplugin.PlayerData;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,12 +20,12 @@ public class Q10SoulEffect implements Listener {
 
     private final TrinketsPlugin plugin;
 
-    // short cd for blindness
+    // cd for blindness
     private final Map<UUID, Long> blindCD = new HashMap<>();
-    // big cd for emergency heal
+    // cd for emergency heal
     private final Map<UUID, Long> healCD = new HashMap<>();
-    // flag for +30% dmg
-    private final Map<UUID, Long> dmgBuffActive = new HashMap<>();
+    // buff end time
+    private final Map<UUID, Long> dmgBuffUntil = new HashMap<>();
 
     public Q10SoulEffect(TrinketsPlugin plugin) {
         this.plugin = plugin;
@@ -50,50 +45,56 @@ public class Q10SoulEffect implements Listener {
 
     @EventHandler
     public void onEntityDamage(EntityDamageByEntityEvent event) {
-        // 1) Blindness if attacker has Q10
-        if (event.getDamager() instanceof Player) {
-            Player damager = (Player) event.getDamager();
+        // 1) Attacker side
+        if (event.getDamager() instanceof Player damager) {
             if (hasQ10SoulEquipped(damager)) {
                 long now = System.currentTimeMillis();
-                long nextUse = blindCD.getOrDefault(damager.getUniqueId(), 0L);
-                if (now >= nextUse && event.getEntity() instanceof Player) {
-                    Player pTarget = (Player) event.getEntity();
-                    pTarget.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 0)); // 3s
-                    damager.sendMessage(ChatColor.DARK_BLUE + "[Q10] You inflicted blindness for 3s!");
-                    blindCD.put(damager.getUniqueId(), now + 5_000); // 5s cd
+                long nextBlind = blindCD.getOrDefault(damager.getUniqueId(), 0L);
+                if (now >= nextBlind && event.getEntity() instanceof Player pTarget) {
+                    // Blindness (3s), cd 5s
+                    pTarget.addPotionEffect(new org.bukkit.potion.PotionEffect(
+                            org.bukkit.potion.PotionEffectType.BLINDNESS, 60, 0
+                    ));
+                    blindCD.put(damager.getUniqueId(), now + 5_000);
+
+                    // Efekty
+                    pTarget.getWorld().playSound(pTarget.getLocation(), Sound.ENTITY_BAT_TAKEOFF, 1f, 0.5f);
+                    pTarget.getWorld().spawnParticle(Particle.SMOKE_LARGE, pTarget.getLocation().add(0,1,0),
+                            10, 0.4, 0.4, 0.4, 0.01);
                 }
 
-                // check if we have 30% dmg buff active
-                long buffExpire = dmgBuffActive.getOrDefault(damager.getUniqueId(), 0L);
-                if (System.currentTimeMillis() < buffExpire) {
-                    // +30%
-                    double newDmg = event.getDamage() * 1.3;
-                    event.setDamage(newDmg);
+                // Sprawdź, czy mamy +30% dmg buff
+                long buffEnd = dmgBuffUntil.getOrDefault(damager.getUniqueId(), 0L);
+                if (System.currentTimeMillis() < buffEnd) {
+                    event.setDamage(event.getDamage() * 1.3);
+                    // Możesz dodać krótką animację
                 }
             }
         }
 
-        // 2) Emergency heal if victim has Q10
-        if (event.getEntity() instanceof Player) {
-            Player victim = (Player) event.getEntity();
+        // 2) Victim side
+        if (event.getEntity() instanceof Player victim) {
             if (hasQ10SoulEquipped(victim)) {
+                // Po ticku sprawdź HP
                 Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                    // check HP after damage is applied
                     double maxHp = victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
                     double currentHp = victim.getHealth();
                     double percent = (currentHp / maxHp) * 100.0;
 
                     if (percent < 30.0) {
-                        // check big cd
                         long now = System.currentTimeMillis();
                         long nextUse = healCD.getOrDefault(victim.getUniqueId(), 0L);
                         if (now >= nextUse) {
+                            // Heal do full
                             victim.setHealth(maxHp);
-                            victim.sendMessage(ChatColor.AQUA + "[Q10] Emergency heal triggered! +30% dmg for 5s!");
+                            // +30% dmg na 5s
+                            dmgBuffUntil.put(victim.getUniqueId(), now + 5_000);
                             healCD.put(victim.getUniqueId(), now + 60_000);
 
-                            // set 30% dmg buff for 5s
-                            dmgBuffActive.put(victim.getUniqueId(), now + 5_000);
+                            // Efekty
+                            victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1f, 1f);
+                            victim.getWorld().spawnParticle(Particle.PORTAL, victim.getLocation().add(0,1,0), 40,
+                                    0.5, 0.5, 0.5, 1);
                         }
                     }
                 }, 1L);

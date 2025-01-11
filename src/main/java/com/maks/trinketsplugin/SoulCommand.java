@@ -29,12 +29,12 @@ public class SoulCommand implements CommandExecutor {
             case "q3":
                 sender.sendMessage(ChatColor.GOLD + "=== Q3: King Heredur’s Frostbound Soul ===");
                 sender.sendMessage(ChatColor.YELLOW + " - 10% chance to block 50% incoming dmg");
-                sender.sendMessage(ChatColor.YELLOW + " - After block, all entities in 10 blocks get 20% slow");
+                sender.sendMessage(ChatColor.YELLOW + " - After block, all entities in 10 blocks get 75% slow");
                 break;
             case "q4":
                 sender.sendMessage(ChatColor.GOLD + "=== Q4: Bearach’s Wildheart Soul ===");
                 sender.sendMessage(ChatColor.YELLOW + " - Once every 15s, your attack roots target for 3s");
-                sender.sendMessage(ChatColor.YELLOW + " - Every attack on a player applies Nausea for 5s (cd 30s)");
+                sender.sendMessage(ChatColor.YELLOW + " - Every attack on a player has 15% chance to rotate him 180 degree`s");
                 break;
             case "q5":
                 sender.sendMessage(ChatColor.GOLD + "=== Q5: Khalys’s Shadowbound Soul ===");
