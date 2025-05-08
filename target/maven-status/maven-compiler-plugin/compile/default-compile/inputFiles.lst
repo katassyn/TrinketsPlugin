@@ -1,9 +1,12 @@
 C:\Users\makss\IdeaProjects\TrinketsPlugin\src\main\java\com\maks\trinketsplugin\PlayerDamageListener.java
 C:\Users\makss\IdeaProjects\TrinketsPlugin\src\main\java\com\maks\trinketsplugin\Q6SoulEffect.java
 C:\Users\makss\IdeaProjects\TrinketsPlugin\src\main\java\com\maks\trinketsplugin\Q7SoulEffect.java
+C:\Users\makss\IdeaProjects\TrinketsPlugin\src\main\java\com\maks\trinketsplugin\JewelsCommand.java
 C:\Users\makss\IdeaProjects\TrinketsPlugin\src\main\java\com\maks\trinketsplugin\Q1SoulEffect.java
+C:\Users\makss\IdeaProjects\TrinketsPlugin\src\main\java\com\maks\trinketsplugin\JewelEvents.java
 C:\Users\makss\IdeaProjects\TrinketsPlugin\src\main\java\com\maks\trinketsplugin\ResetAttributesCommand.java
 C:\Users\makss\IdeaProjects\TrinketsPlugin\src\main\java\com\maks\trinketsplugin\PlayerData.java
+C:\Users\makss\IdeaProjects\TrinketsPlugin\src\main\java\com\maks\trinketsplugin\JewelManager.java
 C:\Users\makss\IdeaProjects\TrinketsPlugin\src\main\java\com\maks\trinketsplugin\Q3SoulEffect.java
 C:\Users\makss\IdeaProjects\TrinketsPlugin\src\main\java\com\maks\trinketsplugin\DatabaseManager.java
 C:\Users\makss\IdeaProjects\TrinketsPlugin\src\main\java\com\maks\trinketsplugin\ItemSerializationUtils.java
@@ -13,6 +16,8 @@ C:\Users\makss\IdeaProjects\TrinketsPlugin\src\main\java\com\maks\trinketsplugin
 C:\Users\makss\IdeaProjects\TrinketsPlugin\src\main\java\com\maks\trinketsplugin\InventoryClickListener.java
 C:\Users\makss\IdeaProjects\TrinketsPlugin\src\main\java\com\maks\trinketsplugin\Q4SoulEffect.java
 C:\Users\makss\IdeaProjects\TrinketsPlugin\src\main\java\com\maks\trinketsplugin\Q9SoulEffect.java
+C:\Users\makss\IdeaProjects\TrinketsPlugin\src\main\java\com\maks\trinketsplugin\JewelType.java
+C:\Users\makss\IdeaProjects\TrinketsPlugin\src\main\java\com\maks\trinketsplugin\JewelAPI.java
 C:\Users\makss\IdeaProjects\TrinketsPlugin\src\main\java\com\maks\trinketsplugin\PlayerQuitListener.java
 C:\Users\makss\IdeaProjects\TrinketsPlugin\src\main\java\com\maks\trinketsplugin\RestrictedAccessory.java
 C:\Users\makss\IdeaProjects\TrinketsPlugin\src\main\java\com\maks\trinketsplugin\TrinketsGUI.java
@@ -23,3 +28,4 @@ C:\Users\makss\IdeaProjects\TrinketsPlugin\src\main\java\com\maks\trinketsplugin
 C:\Users\makss\IdeaProjects\TrinketsPlugin\src\main\java\com\maks\trinketsplugin\Q5SoulEffect.java
 C:\Users\makss\IdeaProjects\TrinketsPlugin\src\main\java\com\maks\trinketsplugin\TrinketsCommand.java
 C:\Users\makss\IdeaProjects\TrinketsPlugin\src\main\java\com\maks\trinketsplugin\TrinketsPlugin.java
+C:\Users\makss\IdeaProjects\TrinketsPlugin\src\main\java\com\maks\trinketsplugin\JewelsGUI.java

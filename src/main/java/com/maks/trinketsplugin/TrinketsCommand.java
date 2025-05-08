@@ -13,7 +13,24 @@ public class TrinketsCommand implements CommandExecutor {
 
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            TrinketsGUI.openMainMenu(player);
+
+            if (args.length > 0) {
+                String subCommand = args[0].toLowerCase();
+
+                switch (subCommand) {
+                    case "accessories":
+                        TrinketsGUI.openAccessoriesMenu(player);
+                        break;
+                    case "jewels":
+                        JewelsGUI.openJewelsMenu(player);
+                        break;
+                    default:
+                        TrinketsGUI.openMainMenu(player);
+                        break;
+                }
+            } else {
+                TrinketsGUI.openMainMenu(player);
+            }
         } else {
             sender.sendMessage("This command can only be used by players.");
         }

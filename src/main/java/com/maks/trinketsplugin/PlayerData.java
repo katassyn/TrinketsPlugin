@@ -19,9 +19,14 @@ public class PlayerData {
 
     private EnumMap<AccessoryType, ItemStack> accessories = new EnumMap<>(AccessoryType.class);
 
+    // Added field for jewels
+    private EnumMap<JewelType, ItemStack> jewels = new EnumMap<>(JewelType.class);
+
     // Accumulated blockChance and blockStrength from all equipped accessories
     private int blockChance = 0;   // Total Block Chance (%)
     private int blockStrength = 0; // Total Block Strength (%)
+
+    private static final int debuggingFlag = 1;
 
     public ItemStack getAccessory(AccessoryType type) {
         return accessories.get(type);
@@ -35,6 +40,37 @@ public class PlayerData {
     public void removeAccessory(AccessoryType type) {
         accessories.remove(type);
         recalculateBlockStats();
+    }
+
+    // Methods for jewels
+    public ItemStack getJewel(JewelType type) {
+        return jewels.get(type);
+    }
+
+    public void setJewel(JewelType type, ItemStack item) {
+        jewels.put(type, item);
+    }
+
+    public void removeJewel(JewelType type) {
+        jewels.remove(type);
+    }
+
+    public Map<JewelType, ItemStack> getAllJewels() {
+        return Collections.unmodifiableMap(jewels);
+    }
+
+    public int getJewelCount() {
+        return jewels.size();
+    }
+
+    public int getJewelCountByType(JewelType type) {
+        int count = 0;
+        for (JewelType jewelType : jewels.keySet()) {
+            if (jewelType == type) {
+                count++;
+            }
+        }
+        return count;
     }
 
     // Recalculate total blockChance and blockStrength from all equipped accessories
@@ -169,6 +205,8 @@ public class PlayerData {
     // Serialization and deserialization methods
     public String serialize() {
         StringBuilder sb = new StringBuilder();
+
+        // Serialize accessories
         for (Map.Entry<AccessoryType, ItemStack> entry : accessories.entrySet()) {
             AccessoryType type = entry.getKey();
             ItemStack item = entry.getValue();
@@ -179,9 +217,23 @@ public class PlayerData {
                 e.printStackTrace();
             }
         }
+
+        // Serialize jewels
+        for (Map.Entry<JewelType, ItemStack> entry : jewels.entrySet()) {
+            JewelType type = entry.getKey();
+            ItemStack item = entry.getValue();
+            try {
+                String itemData = ItemSerializationUtils.itemStackToBase64(item);
+                sb.append("JEWEL_").append(type.name()).append(":").append(itemData).append(";");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         // Serialize blockChance and blockStrength
         sb.append("blockChance=").append(blockChance).append(";");
         sb.append("blockStrength=").append(blockStrength).append(";");
+
         return sb.toString();
     }
 
@@ -189,6 +241,7 @@ public class PlayerData {
         String[] entries = data.split(";");
         for (String entry : entries) {
             if (entry.isEmpty()) continue;
+
             if (entry.startsWith("blockChance=")) {
                 // Deserialize blockChance
                 String value = entry.substring("blockChance=".length());
@@ -205,14 +258,33 @@ public class PlayerData {
                 } catch (NumberFormatException e) {
                     blockStrength = 0;
                 }
+            } else if (entry.startsWith("JEWEL_")) {
+                // Deserialize jewels
+                String[] parts = entry.split(":", 2);
+                if (parts.length < 2) continue;
+
+                String jewelTypeName = parts[0].substring("JEWEL_".length());
+                try {
+                    JewelType jewelType = JewelType.valueOf(jewelTypeName);
+                    ItemStack item = ItemSerializationUtils.itemStackFromBase64(parts[1]);
+                    jewels.put(jewelType, item);
+
+                    if (debuggingFlag == 1) {
+                        System.out.println("[PlayerData] Deserialized jewel: " + jewelType);
+                    }
+                } catch (IllegalArgumentException | IOException e) {
+                    e.printStackTrace();
+                }
             } else {
+                // Deserialize accessories
                 String[] parts = entry.split(":", 2); // Use limit 2 to avoid issues with ':' in Base64
                 if (parts.length < 2) continue;
-                AccessoryType type = AccessoryType.valueOf(parts[0]);
+
                 try {
+                    AccessoryType type = AccessoryType.valueOf(parts[0]);
                     ItemStack item = ItemSerializationUtils.itemStackFromBase64(parts[1]);
                     accessories.put(type, item);
-                } catch (IOException e) {
+                } catch (IllegalArgumentException | IOException e) {
                     e.printStackTrace();
                 }
             }

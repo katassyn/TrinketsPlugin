@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/TrinketsPlugin.iml" filepath="$PROJECT_DIR$/TrinketsPlugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/TrinketsPlugin.iml" filepath="$PROJECT_DIR$/.idea/TrinketsPlugin.iml" />
     </modules>
   </component>
 </project>

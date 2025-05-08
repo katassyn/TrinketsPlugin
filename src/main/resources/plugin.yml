@@ -14,3 +14,6 @@ commands:
     usage: /soul
 #    permission: trinkets.resetattributes
 #    permission-message: Nie masz uprawnień do użycia tej komendy.
+  jewels:
+    description: "Show info about jewels"
+    usage: /jewels

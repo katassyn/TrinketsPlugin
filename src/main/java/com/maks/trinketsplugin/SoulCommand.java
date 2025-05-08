@@ -76,5 +76,6 @@ public class SoulCommand implements CommandExecutor {
     private void sendHelp(CommandSender sender) {
         sender.sendMessage(ChatColor.AQUA + "Usage: /soul <q1|q2|...|q10>");
         sender.sendMessage(ChatColor.GRAY + "Example: /soul q3");
+        sender.sendMessage(ChatColor.GREEN + "Check out all boss souls at: " + ChatColor.YELLOW + "https://dsocraft.pl/bossouls.php");
     }
 }

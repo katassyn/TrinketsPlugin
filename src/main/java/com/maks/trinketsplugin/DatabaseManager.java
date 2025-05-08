@@ -221,10 +221,18 @@ public class DatabaseManager {
                 }
             }
 
-            data.setAccessory(type, item);
-            data.applyAttributes(player, item, type);
+            // Clone the item and set amount to 1 to store in player data
+            ItemStack accessoryToEquip = item.clone();
+            accessoryToEquip.setAmount(1);
+
+            data.setAccessory(type, accessoryToEquip);
+            data.applyAttributes(player, accessoryToEquip, type);
             savePlayerData(uuid, data);
-            player.getInventory().removeItem(item);
+
+            // Remove only one item from the player's inventory
+            ItemStack itemToRemove = item.clone();
+            itemToRemove.setAmount(1);
+            player.getInventory().removeItem(itemToRemove);
 
             String accessoryName = (restrictedAccessory != null) ? restrictedAccessory.getDisplayName() : type.getDisplayName();
             player.sendMessage("You have equipped the " + accessoryName + "!");
@@ -247,7 +255,12 @@ public class DatabaseManager {
             data.removeAccessory(type);
             data.removeAttributes(player, type);
             savePlayerData(uuid, data);
-            player.getInventory().addItem(item);
+
+            // Ensure we only return one accessory, not the entire stack
+            ItemStack accessoryToReturn = item.clone();
+            accessoryToReturn.setAmount(1);
+            player.getInventory().addItem(accessoryToReturn);
+
             player.sendMessage("You have unequipped the " + type.getDisplayName() + ".");
             sendBlockStatsInfo(player, data, item, false);
         });

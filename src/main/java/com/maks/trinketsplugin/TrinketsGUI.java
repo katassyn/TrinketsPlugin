@@ -17,31 +17,21 @@ public class TrinketsGUI {
         ItemStack accessoriesIcon = createMenuItem(Material.DIAMOND, "Accessories", "Manage your accessories.");
         ItemStack runesIcon = createMenuItem(Material.ENCHANTED_BOOK, "Runes", "Manage your runes.");
         ItemStack gemsIcon = createMenuItem(Material.EMERALD, "Gems", "Manage your gems.");
+        ItemStack jewelsIcon = createMenuItem(Material.MAGENTA_DYE, "Jewels", "Manage your jewels.");
 
         // Place icons in the GUI
-        gui.setItem(3, accessoriesIcon);
-        gui.setItem(4, runesIcon);
+        gui.setItem(2, accessoriesIcon);
+        gui.setItem(3, runesIcon);
         gui.setItem(5, gemsIcon);
+        gui.setItem(6, jewelsIcon);
 
         player.openInventory(gui);
     }
 
     public static void openAccessoriesMenu(Player player) {
         TrinketsPlugin.getInstance().getDatabaseManager().loadPlayerData(player.getUniqueId(), data -> {
-            int inventorySize = 9; // Start with size 9
-
-            // Calculate required inventory size based on the highest slot number
-            int highestSlot = 0;
-            for (AccessoryType type : AccessoryType.values()) {
-                if (type.getSlot() > highestSlot) {
-                    highestSlot = type.getSlot();
-                }
-            }
-
-            // Adjust inventory size to fit all slots (must be a multiple of 9)
-            while (inventorySize <= highestSlot) {
-                inventorySize += 9;
-            }
+            // Fixed inventory size of 18 slots (2 rows)
+            int inventorySize = 18;
 
             Inventory gui = Bukkit.createInventory(null, inventorySize, "Accessories");
 
@@ -49,11 +39,17 @@ public class TrinketsGUI {
             for (AccessoryType type : AccessoryType.values()) {
                 ItemStack item = data.getAccessory(type);
                 if (item != null) {
-                    gui.setItem(type.getSlot(), item);
+                    // Clone the accessory and set amount to 1 to prevent showing stacks in GUI
+                    ItemStack displayItem = item.clone();
+                    displayItem.setAmount(1);
+                    gui.setItem(type.getSlot(), displayItem);
                 } else {
                     gui.setItem(type.getSlot(), createMenuItem(Material.GRAY_STAINED_GLASS_PANE, type.getDisplayName(), "Empty slot."));
                 }
             }
+
+            // Add back button in the bottom right corner
+            gui.setItem(17, createMenuItem(Material.ARROW, "§eBack", "§7Return to the main menu"));
 
             // Open the inventory on the main thread
             Bukkit.getScheduler().runTask(TrinketsPlugin.getInstance(), () -> {

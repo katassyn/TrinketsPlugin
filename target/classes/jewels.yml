@@ -1,0 +1,246 @@
+# Jewels Configuration
+# This file defines the properties of jewels in the TrinketsPlugin
+
+# General settings
+settings:
+  required_level: 50
+  debug: true
+
+# Jewel types and their properties
+jewels:
+  DAMAGE:
+    display_name: "Emberfang Jewel"
+    material: BROWN_DYE
+    description: "Grants increased damage"
+    max_tier: 3
+    max_equipped: 1
+    effects:
+      tier1:
+        damage_percent: 2
+      tier2:
+        damage_percent: 4
+      tier3:
+        damage_percent: 8
+
+  MOVE_SPEED:
+    display_name: "Windrunner Jewel"
+    material: WHITE_DYE
+    description: "Grants increased movement speed"
+    max_tier: 3
+    max_equipped: 1
+    effects:
+      tier1:
+        speed_percent: 2
+      tier2:
+        speed_percent: 4
+      tier3:
+        speed_percent: 8
+
+  ATTACK_SPEED:
+    display_name: "Quicksilver Jewel"
+    material: LIGHT_GRAY_DYE
+    description: "Grants increased attack speed"
+    max_tier: 3
+    max_equipped: 1
+    effects:
+      tier1:
+        attack_speed_percent: 2
+      tier2:
+        attack_speed_percent: 4
+      tier3:
+        attack_speed_percent: 8
+
+  HEALTH:
+    display_name: "Lifeblood Jewel"
+    material: GRAY_DYE
+    description: "Grants additional health"
+    max_tier: 3
+    max_equipped: 1
+    effects:
+      tier1:
+        health_bonus: 10
+      tier2:
+        health_bonus: 20
+      tier3:
+        health_bonus: 30
+
+  ARMOR_TOUGHNESS:
+    display_name: "Ironhide Jewel"
+    material: YELLOW_DYE
+    description: "Grants armor toughness"
+    max_tier: 3
+    max_equipped: 1
+    effects:
+      tier1:
+        toughness_bonus: 1
+      tier2:
+        toughness_bonus: 2
+      tier3:
+        toughness_bonus: 4
+
+  LASTING_HEALING:
+    display_name: "Rejuvenation Jewel"
+    material: LIME_DYE
+    description: "Heals after killing enemies"
+    max_tier: 3
+    max_equipped: 1
+    cooldown: 30
+    effects:
+      tier1:
+        heal_amount: 5
+        duration: 5
+      tier2:
+        heal_amount: 10
+        duration: 5
+      tier3:
+        heal_amount: 15
+        duration: 5
+
+  AMPLIFIED_HEALING:
+    display_name: "Lifeforce Jewel"
+    material: CYAN_DYE
+    description: "Increases damage after healing"
+    max_tier: 3
+    max_equipped: 1
+    cooldown: 60
+    effects:
+      tier1:
+        damage_amp_percent: 25
+        threshold: 20
+        window: 2.5
+        duration: 5
+      tier2:
+        damage_amp_percent: 50
+        threshold: 20
+        window: 2.5
+        duration: 5
+      tier3:
+        damage_amp_percent: 100
+        threshold: 20
+        window: 2.5
+        duration: 5
+
+  COOLDOWN:
+    display_name: "Timewarper Jewel"
+    material: BLUE_DYE
+    description: "Reduces cooldowns"
+    max_tier: 3
+    max_equipped: 3
+    effects:
+      tier1:
+        cooldown_reduction_percent: 2
+      tier2:
+        cooldown_reduction_percent: 3
+      tier3:
+        cooldown_reduction_percent: 5
+
+  RAGE:
+    display_name: "Berserker Jewel"
+    material: PURPLE_DYE
+    description: "Grants fury and critical chance"
+    max_tier: 3
+    max_equipped: 1
+    cooldown: 60
+    effects:
+      tier1:
+        proc_chance_percent: 10
+        crit_chance_percent: 15
+        duration: 5
+      tier2:
+        proc_chance_percent: 15
+        crit_chance_percent: 20
+        duration: 5
+      tier3:
+        proc_chance_percent: 20
+        crit_chance_percent: 30
+        duration: 5
+
+  STEAM_SALE:
+    display_name: "Merchant Jewel"
+    material: MAGENTA_DYE
+    description: "Cheaper crafting and better selling"
+    max_tier: 3
+    max_equipped: 1
+    effects:
+      tier1:
+        sell_bonus_percent: 20
+        craft_discount_percent: 10
+      tier2:
+        sell_bonus_percent: 30
+        craft_discount_percent: 20
+      tier3:
+        sell_bonus_percent: 50
+        craft_discount_percent: 30
+
+  PHOENIX:
+    display_name: "Phoenix Jewel"
+    material: PINK_DYE
+    description: "Cheat death"
+    max_tier: 3
+    max_equipped: 1
+    effects:
+      tier1:
+        cooldown_minutes: 60
+        immunity_seconds: 3
+      tier2:
+        cooldown_minutes: 45
+        immunity_seconds: 3
+      tier3:
+        cooldown_minutes: 30
+        immunity_seconds: 3
+
+  ANDERMANT:
+    display_name: "Andermant Jewel"
+    material: GUNPOWDER
+    description: "Chance to duplicate Andermant"
+    max_tier: 3
+    max_equipped: 1
+    effects:
+      tier1:
+        dupe_chance_percent: 10
+      tier2:
+        dupe_chance_percent: 20
+      tier3:
+        dupe_chance_percent: 30
+
+  CLOVER:
+    display_name: "Sunspire Amber"
+    material: GLOWSTONE_DUST
+    description: "Get additional Glided Sunflowers"
+    max_tier: 3
+    max_equipped: 1
+    effects:
+      tier1:
+        extra_amount: 1
+      tier2:
+        extra_amount: 2
+      tier3:
+        extra_amount: 3
+
+  DRAKENMELON:
+    display_name: "DrakenMelon Jewel"
+    material: SUGAR
+    description: "Get additional drakenmelons"
+    max_tier: 3
+    max_equipped: 1
+    effects:
+      tier1:
+        extra_amount: 1
+      tier2:
+        extra_amount: 2
+      tier3:
+        extra_amount: 3
+
+  COLLECTOR:
+    display_name: "Collector Jewel"
+    material: GHAST_TEAR
+    description: "Finishes off low health enemies"
+    max_tier: 3
+    max_equipped: 1
+    effects:
+      tier1:
+        execute_threshold_percent: 2
+      tier2:
+        execute_threshold_percent: 3
+      tier3:
+        execute_threshold_percent: 5

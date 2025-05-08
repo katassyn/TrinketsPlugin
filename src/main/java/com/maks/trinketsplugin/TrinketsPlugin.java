@@ -15,6 +15,8 @@ public class TrinketsPlugin extends JavaPlugin {
     private DatabaseManager databaseManager;
     private File blokadyFile;
     private FileConfiguration blokadyConfig;
+    private JewelManager jewelManager;
+    private static final int debuggingFlag = 1;
 
     private static Economy econ = null;
     @Override
@@ -29,6 +31,12 @@ public class TrinketsPlugin extends JavaPlugin {
         }
         blokadyConfig = YamlConfiguration.loadConfiguration(blokadyFile);
 
+        // Create jewels.yml if it doesn't exist
+        File jewelsFile = new File(getDataFolder(), "jewels.yml");
+        if (!jewelsFile.exists()) {
+            saveResource("jewels.yml", false);
+        }
+
         // Initialize DatabaseManager
         databaseManager = new DatabaseManager();
 
@@ -37,6 +45,12 @@ public class TrinketsPlugin extends JavaPlugin {
 
         // Open database connection
         databaseManager.openConnection();
+
+        // Initialize JewelManager
+        jewelManager = new JewelManager(this);
+
+        // Initialize JewelAPI
+        JewelAPI.initialize(this);
 
         // Register commands
         getCommand("trinkets").setExecutor(new TrinketsCommand());
@@ -54,6 +68,7 @@ public class TrinketsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerDamageListener(), this); // Register the new listener
+        getServer().getPluginManager().registerEvents(new JewelEvents(this, jewelManager), this);
         getServer().getPluginManager().registerEvents(new Q1SoulEffect(this), this);
         getServer().getPluginManager().registerEvents(new Q2SoulEffect(this), this);
         getServer().getPluginManager().registerEvents(new Q3SoulEffect(this), this);
@@ -69,9 +84,19 @@ public class TrinketsPlugin extends JavaPlugin {
             getDatabaseManager().loadPlayerData(player.getUniqueId(), data -> {
                 data.removeAllAttributes(player);
                 data.applyAllAttributes(player);
+
+                // Apply jewel attributes
+                jewelManager.applyJewelAttributes(player, data);
             });
         }
+
+        if (debuggingFlag == 1) {
+            getLogger().info("TrinketsPlugin has been enabled with Jewel system and debugging enabled!");
+        } else {
+            getLogger().info("TrinketsPlugin has been enabled with Jewel system!");
+        }
         getCommand("soul").setExecutor(new SoulCommand());
+        getCommand("jewels").setExecutor(new JewelsCommand());
 
     }
 
@@ -93,6 +118,10 @@ public class TrinketsPlugin extends JavaPlugin {
 
     public DatabaseManager getDatabaseManager() {
         return databaseManager;
+    }
+
+    public JewelManager getJewelManager() {
+        return jewelManager;
     }
     private boolean setupEconomy() {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
