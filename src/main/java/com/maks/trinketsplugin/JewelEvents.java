@@ -434,6 +434,24 @@ public class JewelEvents implements Listener {
                         player.getName() + ", amount: " + extraAmount);
             }
         }
+
+        // Handle LOCKPICK jewel
+        ItemStack lockpickJewel = data.getJewel(JewelType.LOCKPICK);
+        if (lockpickJewel != null && itemName != null && itemName.contains("Lockpick")) {
+            int tier = jewelManager.getJewelTier(lockpickJewel);
+            int extraAmount = tier == 1 ? 3 : tier == 2 ? 4 : 5;
+
+            // Add extra Lockpicks
+            ItemStack extraItem = item.clone();
+            extraItem.setAmount(extraAmount);
+            player.getInventory().addItem(extraItem);
+            // No action bar message for Lockpick Jewel
+
+            if (debuggingFlag == 1) {
+                Bukkit.getLogger().info("[JewelEvents] Extra lockpicks given to player: " + 
+                        player.getName() + ", amount: " + extraAmount);
+            }
+        }
     }
 
     // Method to track healing for AMPLIFIED_HEALING jewel

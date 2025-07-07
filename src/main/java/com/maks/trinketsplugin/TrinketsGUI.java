@@ -17,7 +17,7 @@ public class TrinketsGUI {
         ItemStack accessoriesIcon = createMenuItem(Material.DIAMOND, "Accessories", "Manage your accessories.");
         ItemStack runesIcon = createMenuItem(Material.ENCHANTED_BOOK, "Runes", "Manage your runes.");
         ItemStack gemsIcon = createMenuItem(Material.EMERALD, "Gems", "Manage your gems.");
-        ItemStack jewelsIcon = createMenuItem(Material.MAGENTA_DYE, "Jewels", "Manage your jewels.");
+        ItemStack jewelsIcon = createMenuItem(Material.FEATHER, "Jewels", "Manage your jewels.");
 
         // Place icons in the GUI
         gui.setItem(2, accessoriesIcon);

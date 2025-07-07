@@ -621,6 +621,13 @@ public class JewelManager {
                 lore.add(ChatColor.translateAlternateColorCodes('&', "&7This jewel pulses with sweet energy,"));
                 lore.add(ChatColor.translateAlternateColorCodes('&', "&7drawing more DrakenMelons to you."));
                 break;
+            case LOCKPICK:
+                int extraLockpicks = tier == 1 ? 3 : tier == 2 ? 4 : 5;
+                lore.add(ChatColor.translateAlternateColorCodes('&', "&6Get +" + extraLockpicks + " additional Lockpicks"));
+                lore.add(ChatColor.translateAlternateColorCodes('&', "&6when picked up"));
+                lore.add(ChatColor.translateAlternateColorCodes('&', "&7A dark jewel that whispers secrets"));
+                lore.add(ChatColor.translateAlternateColorCodes('&', "&7of locks and teaches nimble fingers."));
+                break;
             case COLLECTOR:
                 double executeThreshold = tier == 1 ? 2 : tier == 2 ? 3 : 5;
                 lore.add(ChatColor.translateAlternateColorCodes('&', "&6Enemies below " + executeThreshold + "% HP"));

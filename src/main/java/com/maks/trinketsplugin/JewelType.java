@@ -19,6 +19,7 @@ public enum JewelType {
     ANDERMANT("Shadowvein Crystal", Material.GUNPOWDER, "Chance to duplicate Andermant", 3),
     CLOVER("Sunspire Amber", Material.GLOWSTONE_DUST, "Get additional clovers", 3),
     DRAKENMELON("Melonbane Prism", Material.SUGAR, "Get additional drakenmelons", 3),
+    LOCKPICK("Shadowpick Onyx", Material.FEATHER, "Get additional lockpicks", 3),
     COLLECTOR("Deathcut Garnet", Material.GHAST_TEAR, "Finishes off low health enemies", 3);
 
     private final String displayName;
