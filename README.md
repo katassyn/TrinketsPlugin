@@ -55,6 +55,62 @@ The plugin includes 10 unique boss souls with special effects:
     - On player hit: Blindness for 3s (5s cooldown)
     - When HP < 30%: heal to full and gain +30% damage for 5s (60s cooldown)
 
+### Jewel System
+The plugin features a powerful jewel system that allows players to enhance their abilities through equippable jewels:
+
+#### Jewel Features
+- 15+ unique jewel types with different effects
+- Tiered jewel system (Tier 1-3) with increasing power
+- GUI-based jewel management
+- Level 50 requirement to equip jewels
+- Special Focus Jewels that can be stacked (up to 3)
+
+#### Available Jewels
+1. **Combat Jewels**
+   - Emberfang Jewel: Increases damage (2/4/8%)
+   - Windrunner Jewel: Increases movement speed (2/4/8%)
+   - Quicksilver Jewel: Increases attack speed (2/4/8%)
+   - Lifeblood Jewel: Grants additional health (10/20/30 HP)
+   - Ironhide Jewel: Grants armor toughness (1/2/4)
+
+2. **Utility Jewels**
+   - Rejuvenation Jewel: Heals after killing enemies (5/10/15 HP for 5s)
+   - Lifeforce Jewel: Increases damage after healing (25/50/100% for 5s)
+   - Timewarper Jewel: Reduces cooldowns (2/3/5% per jewel, stack up to 3)
+   - Berserker Jewel: Grants critical chance (15/20/30% for 5s)
+   - Phoenix Jewel: Prevents death (60/45/30 minute cooldown)
+
+3. **Economy Jewels**
+   - Merchant Jewel: Better selling prices and crafting discounts
+   - Andermant Jewel: Chance to duplicate Andermant (10/20/30%)
+   - Sunspire Amber: Get additional Gilded Sunflowers (1/2/3)
+   - DrakenMelon Jewel: Get additional drakenmelons (1/2/3)
+   - Collector Jewel: Executes low health enemies (2/3/5% threshold)
+
+#### Commands
+- `/jewels` - Opens a link to detailed jewel information
+- `/trinkets` - Opens the trinkets menu where you can manage jewels
+
+#### Configuration
+Jewels can be configured in the `jewels.yml` file:
+
+```yaml
+# Example jewel configuration
+DAMAGE:
+  display_name: "Emberfang Jewel"
+  material: BROWN_DYE
+  description: "Grants increased damage"
+  max_tier: 3
+  max_equipped: 1
+  effects:
+    tier1:
+      damage_percent: 2
+    tier2:
+      damage_percent: 4
+    tier3:
+      damage_percent: 8
+```
+
 ## Requirements
 
 - Java 16 or higher
@@ -96,6 +152,7 @@ items:
 ## Commands
 
 - `/trinkets` - Open the trinkets menu
+- `/jewels` - View information about jewels
 - `/soul <q1-q10>` - View information about a specific boss soul
 - `/resetattributes [player]` - Reset all attribute modifiers (requires permission: trinkets.resetattributes)
 
@@ -107,7 +164,8 @@ items:
 
 The plugin provides access to its features through the DatabaseManager class:
 
-```java
+```
+// Get the database manager
 TrinketsPlugin.getInstance().getDatabaseManager()
 ```
 
