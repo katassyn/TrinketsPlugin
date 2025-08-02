@@ -37,6 +37,11 @@ public class InventoryClickListener implements Listener {
             }
 
         } else if (title.equals("Accessories")) {
+            // Allow players to interact with their own inventory without triggering unequip logic
+            if (event.getClickedInventory() == null || event.getClickedInventory().equals(player.getInventory())) {
+                return;
+            }
+
             event.setCancelled(true);
 
             ItemStack clickedItem = event.getCurrentItem();

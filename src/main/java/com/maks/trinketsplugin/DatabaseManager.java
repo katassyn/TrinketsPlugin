@@ -187,6 +187,11 @@ public class DatabaseManager {
                 return;
             }
 
+            if (item.getAmount() > 1) {
+                player.sendMessage(ChatColor.RED + "Accessories must be unstacked before equipping.");
+                return;
+            }
+
             int minLevelForOtherSlots = 50;
             int playerLevel = player.getLevel();
 
@@ -260,6 +265,7 @@ public class DatabaseManager {
             ItemStack accessoryToReturn = item.clone();
             accessoryToReturn.setAmount(1);
             player.getInventory().addItem(accessoryToReturn);
+            TrinketsPlugin.getInstance().getOffhandListener().updateOffhand(player);
 
             player.sendMessage("You have unequipped the " + type.getDisplayName() + ".");
             sendBlockStatsInfo(player, data, item, false);
