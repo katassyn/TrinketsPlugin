@@ -4,7 +4,7 @@
 # General settings
 settings:
   required_level: 50
-  debug: true
+  debug: false
 
 # Jewel types and their properties
 jewels:

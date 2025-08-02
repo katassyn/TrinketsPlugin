@@ -16,7 +16,7 @@ public class TrinketsPlugin extends JavaPlugin {
     private File blokadyFile;
     private FileConfiguration blokadyConfig;
     private JewelManager jewelManager;
-    private static final int debuggingFlag = 1;
+    private static final int debuggingFlag = 0;
 
     private static Economy econ = null;
     @Override
