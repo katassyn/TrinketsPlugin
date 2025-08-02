@@ -19,6 +19,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.UUID;
 
 public class OffhandListener implements Listener {
@@ -37,7 +38,7 @@ public class OffhandListener implements Listener {
     public void onClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) return;
         if (event.getSlotType() != InventoryType.SlotType.QUICKBAR
-                || event.getSlot() != PlayerInventory.SLOT_OFFHAND) return;
+                || event.getSlot() != 40) return;
 
         Player player = (Player) event.getWhoClicked();
         Bukkit.getScheduler().runTask(plugin, () -> updateOffhand(player));
@@ -80,7 +81,11 @@ public class OffhandListener implements Listener {
         for (Attribute attribute : modifiers.keySet()) {
             AttributeInstance instance = player.getAttribute(attribute);
             if (instance == null) continue;
-            for (AttributeModifier modifier : modifiers.get(attribute)) {
+            
+            Collection<AttributeModifier> attributeModifiers = modifiers.get(attribute);
+            if (attributeModifiers == null || attributeModifiers.isEmpty()) continue;
+            
+            for (AttributeModifier modifier : attributeModifiers) {
                 AttributeModifier negative = new AttributeModifier(
                         UUID.randomUUID(),
                         "trinket.offhand." + modifier.getName(),
