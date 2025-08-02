@@ -24,6 +24,7 @@ public class PlayerInteractListener implements Listener {
             if (isAccessoryItem(item)) {
                 // Equip the accessory
                 TrinketsPlugin.getInstance().getDatabaseManager().equipAccessory(player, item);
+                TrinketsPlugin.getInstance().getOffhandListener().updateOffhand(player);
                 event.setCancelled(true);
             } else if (isJewelItem(item)) {
                 // Equip the jewel
