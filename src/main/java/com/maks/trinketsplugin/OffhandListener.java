@@ -14,6 +14,8 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
@@ -34,7 +36,9 @@ public class OffhandListener implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) return;
-        if (event.getSlotType() != InventoryType.SlotType.OFF_HAND) return;
+        if (event.getSlotType() != InventoryType.SlotType.QUICKBAR
+                || event.getSlot() != PlayerInventory.SLOT_OFFHAND) return;
+
         Player player = (Player) event.getWhoClicked();
         Bukkit.getScheduler().runTask(plugin, () -> updateOffhand(player));
     }
