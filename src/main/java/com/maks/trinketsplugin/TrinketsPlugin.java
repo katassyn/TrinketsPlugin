@@ -91,6 +91,10 @@ public class TrinketsPlugin extends JavaPlugin {
 
                 // Apply jewel attributes
                 jewelManager.applyJewelAttributes(player, data);
+
+                // Ensure accessories in hands don't grant attributes
+                offhandListener.updateOffhand(player);
+                offhandListener.updateMainHand(player);
             });
         }
 
