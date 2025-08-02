@@ -10,7 +10,7 @@ import java.util.UUID;
  */
 public class JewelAPI {
 
-    private static final int debuggingFlag = 1;
+    private static final int debuggingFlag = 0;
     private static TrinketsPlugin plugin;
 
     public static void initialize(TrinketsPlugin mainPlugin) {

@@ -19,6 +19,7 @@ public class TrinketsPlugin extends JavaPlugin {
     private OffhandListener offhandListener;
     private static final int debuggingFlag = 1;
 
+
     private static Economy econ = null;
     @Override
     public void onEnable() {
