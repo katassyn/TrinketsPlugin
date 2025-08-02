@@ -16,6 +16,7 @@ public class TrinketsPlugin extends JavaPlugin {
     private File blokadyFile;
     private FileConfiguration blokadyConfig;
     private JewelManager jewelManager;
+    private OffhandListener offhandListener;
     private static final int debuggingFlag = 1;
 
     private static Economy econ = null;
@@ -68,6 +69,8 @@ public class TrinketsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerDamageListener(), this); // Register the new listener
+        offhandListener = new OffhandListener(this);
+        getServer().getPluginManager().registerEvents(offhandListener, this);
         getServer().getPluginManager().registerEvents(new JewelEvents(this, jewelManager), this);
         getServer().getPluginManager().registerEvents(new Q1SoulEffect(this), this);
         getServer().getPluginManager().registerEvents(new Q2SoulEffect(this), this);
@@ -122,6 +125,10 @@ public class TrinketsPlugin extends JavaPlugin {
 
     public JewelManager getJewelManager() {
         return jewelManager;
+    }
+
+    public OffhandListener getOffhandListener() {
+        return offhandListener;
     }
     private boolean setupEconomy() {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
