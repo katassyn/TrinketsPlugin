@@ -26,7 +26,7 @@ public class PlayerData {
     private int blockChance = 0;   // Total Block Chance (%)
     private int blockStrength = 0; // Total Block Strength (%)
 
-    private static final int debuggingFlag = 1;
+    private static final int debuggingFlag = 0;
 
     public ItemStack getAccessory(AccessoryType type) {
         return accessories.get(type);

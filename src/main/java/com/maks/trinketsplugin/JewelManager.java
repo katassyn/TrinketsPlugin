@@ -14,7 +14,7 @@ import java.util.*;
 
 public class JewelManager {
 
-    private static final int debuggingFlag = 1;
+    private static final int debuggingFlag = 0;
     private final TrinketsPlugin plugin;
     private final Map<UUID, Map<String, AttributeModifier>> appliedModifiers = new HashMap<>();
 

@@ -30,7 +30,7 @@ import java.util.UUID;
 
 public class JewelEvents implements Listener {
 
-    private static final int debuggingFlag = 1;
+    private static final int debuggingFlag = 0;
     private final TrinketsPlugin plugin;
     private final JewelManager jewelManager;
     private final Random random = new Random();

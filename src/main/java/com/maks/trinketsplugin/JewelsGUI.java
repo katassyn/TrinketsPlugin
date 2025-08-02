@@ -14,7 +14,7 @@ import java.util.List;
 
 public class JewelsGUI {
 
-    private static final int debuggingFlag = 1;
+    private static final int debuggingFlag = 0;
 
     public static void openJewelsMenu(Player player) {
         if (debuggingFlag == 1) {
