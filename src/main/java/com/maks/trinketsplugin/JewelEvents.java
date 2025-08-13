@@ -23,9 +23,12 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 
 public class JewelEvents implements Listener {
@@ -37,6 +40,65 @@ public class JewelEvents implements Listener {
 
     // Flag to control visual effects
     private static final boolean SHOW_VISUAL_EFFECTS = false; // Set to true if you want particles
+
+    // Keywords for items affected by the Ingredient Jewel
+    private static final Set<String> INGREDIENT_KEYWORDS = new HashSet<>(Arrays.asList(
+            "Broken Armor Piece",
+            "Tousled Priest Robe",
+            "Black Fur",
+            "Dragon Scale",
+            "Chain Fragment",
+            "Satyr`s Horn",
+            "Gorgon`s Poison",
+            "Dragon`s Gold",
+            "Protector`s Heart",
+            "Dead Bush",
+            "Demon Blood",
+            "Sticky Mucus",
+            "Soul of an Acient Spartan",
+            "Shadow Rose",
+            "Throphy of the Long Forgotten Bone Dragon",
+            "Monster Soul Fragment",
+            "Monster Heart Fragment",
+            "Grimmage Burned Cape",
+            "Arachna Poisonous Skeleton",
+            "Heredur's Glacial Armor",
+            "Bearach Honey Hide",
+            "Khalys Magic Robe",
+            "Herald's Dragon Skin",
+            "Sigrismarr's Eternal Ice",
+            "Medusa Stone Scales",
+            "Gorga's Broken Tooth",
+            "Mortis Sacrificial Bones",
+            "Ore",
+            "Cursed Blood",
+            "Shattered Bone",
+            "Leaf",
+            "Algal",
+            "Shiny Pearl",
+            "Heart of the Ocean",
+            "Hematite",
+            "Black Spinel",
+            "Black Diamond",
+            "Magnetite",
+            "Silver",
+            "Osmium",
+            "Azurite",
+            "Tanzanite",
+            "Blue Sapphire",
+            "Carnelian",
+            "Red Spinel",
+            "Pigeon Blood Ruby",
+            "Pyrite",
+            "Yellow Topaz",
+            "Yellow Sapphire",
+            "Malachite",
+            "Peridot",
+            "Tropiche Emerald",
+            "Danburite",
+            "Goshenite",
+            "Cerussite"
+    ));
 
     // Helper method to send action bar messages with cooldown
     private final Map<UUID, Long> lastActionBarTime = new HashMap<>();
@@ -448,7 +510,24 @@ public class JewelEvents implements Listener {
             // No action bar message for Lockpick Jewel
 
             if (debuggingFlag == 1) {
-                Bukkit.getLogger().info("[JewelEvents] Extra lockpicks given to player: " + 
+                Bukkit.getLogger().info("[JewelEvents] Extra lockpicks given to player: " +
+                        player.getName() + ", amount: " + extraAmount);
+            }
+        }
+
+        // Handle INGREDIENT jewel
+        ItemStack ingredientJewel = data.getJewel(JewelType.INGREDIENT);
+        if (ingredientJewel != null && itemName != null &&
+                INGREDIENT_KEYWORDS.stream().anyMatch(itemName::contains)) {
+            int tier = jewelManager.getJewelTier(ingredientJewel);
+            int extraAmount = tier == 1 ? 1 : tier == 2 ? 2 : 3;
+
+            ItemStack extraItem = item.clone();
+            extraItem.setAmount(extraAmount);
+            player.getInventory().addItem(extraItem);
+
+            if (debuggingFlag == 1) {
+                Bukkit.getLogger().info("[JewelEvents] Extra ingredients given to player: " +
                         player.getName() + ", amount: " + extraAmount);
             }
         }
