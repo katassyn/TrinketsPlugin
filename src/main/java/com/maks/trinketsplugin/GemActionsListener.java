@@ -45,7 +45,6 @@ public class GemActionsListener implements Listener {
         if (name.endsWith("_BOOTS")) return EquipmentSlot.FEET;
         return EquipmentSlot.CHEST;
     }
-
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) return;
@@ -128,6 +127,7 @@ public class GemActionsListener implements Listener {
             meta.setLore(lore);
             EquipmentSlot slot = weapon ? EquipmentSlot.HAND : getArmorSlot(item.getType());
             gem.applyAttributes(meta, weapon, slot);
+
             item.setItemMeta(meta);
         }
         inv.setItem(11, null);
@@ -178,6 +178,7 @@ public class GemActionsListener implements Listener {
         if (meta != null) {
             meta.setLore(lore);
             found.removeAttributes(meta);
+
             item.setItemMeta(meta);
         }
         inv.setItem(13, null);
