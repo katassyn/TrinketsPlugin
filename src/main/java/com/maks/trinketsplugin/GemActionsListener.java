@@ -21,13 +21,17 @@ public class GemActionsListener implements Listener {
 
     private void normalizeRarityLine(List<String> lore) {
         boolean found = false;
-        for (int i = 0; i < lore.size();) {
-            String stripped = ChatColor.stripColor(lore.get(i));
-            if (stripped.startsWith("Rarity:")) {
+        for (int i = 0; i < lore.size(); ) {
+            String stripped = ChatColor.stripColor(lore.get(i)).trim().toLowerCase();
+            if (stripped.startsWith("rarity:")) {
                 if (!found) {
                     String line = lore.get(i);
-                    int resetIndex = line.indexOf(ChatColor.RESET.toString());
-                    String suffix = resetIndex >= 0 ? line.substring(resetIndex + ChatColor.RESET.toString().length()) : line.substring(line.indexOf(":") + 1);
+                    int idx = line.toLowerCase().indexOf("rarity:");
+                    String suffix = line.substring(idx + "rarity:".length());
+                    if (suffix.startsWith(ChatColor.RESET.toString())) {
+                        suffix = suffix.substring(ChatColor.RESET.toString().length());
+                    }
+
                     lore.set(i, ChatColor.WHITE.toString() + ChatColor.BOLD + "Rarity:" + ChatColor.RESET + suffix);
                     found = true;
                     i++;
