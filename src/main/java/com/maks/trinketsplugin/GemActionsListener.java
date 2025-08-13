@@ -20,14 +20,22 @@ import java.util.Map;
 public class GemActionsListener implements Listener {
 
     private void normalizeRarityLine(List<String> lore) {
-        for (int i = 0; i < lore.size(); i++) {
+        boolean found = false;
+        for (int i = 0; i < lore.size();) {
             String stripped = ChatColor.stripColor(lore.get(i));
             if (stripped.startsWith("Rarity:")) {
-                String line = lore.get(i);
-                int resetIndex = line.indexOf(ChatColor.RESET.toString());
-                String suffix = resetIndex >= 0 ? line.substring(resetIndex + ChatColor.RESET.toString().length()) : line.substring(line.indexOf(":") + 1);
-                lore.set(i, ChatColor.WHITE.toString() + ChatColor.BOLD + "Rarity:" + ChatColor.RESET + suffix);
-                break;
+                if (!found) {
+                    String line = lore.get(i);
+                    int resetIndex = line.indexOf(ChatColor.RESET.toString());
+                    String suffix = resetIndex >= 0 ? line.substring(resetIndex + ChatColor.RESET.toString().length()) : line.substring(line.indexOf(":") + 1);
+                    lore.set(i, ChatColor.WHITE.toString() + ChatColor.BOLD + "Rarity:" + ChatColor.RESET + suffix);
+                    found = true;
+                    i++;
+                } else {
+                    lore.remove(i);
+                }
+            } else {
+                i++;
             }
         }
     }
