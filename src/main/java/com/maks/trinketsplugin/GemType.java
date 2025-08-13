@@ -2,12 +2,16 @@ package com.maks.trinketsplugin;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import com.google.common.collect.Multimap;
 
-import java.util.Arrays;
+import java.util.*;
 
 public enum GemType {
     RUBY_I(Material.COOKED_MUTTON, "&9[ I ] Ruby", "&6⚔ Weapon Socket: &a+1% Damage", "&b🛡 Armor Socket: &a+20 Damage"),
@@ -84,7 +88,146 @@ public enum GemType {
         String source = weapon ? weaponLore : armorLore;
         String[] parts = source.split(":", 2);
         String bonus = parts.length > 1 ? parts[1].trim() : source;
-        return ChatColor.translateAlternateColorCodes('&', display + " Socketed " + bonus);
+        return ChatColor.translateAlternateColorCodes('&', display + " Socketed " + bonus + "&r");
+    }
+
+    public void applyAttributes(ItemMeta meta, boolean weapon, EquipmentSlot slot) {
+        if (meta == null) return;
+        Attribute attribute;
+        double amount;
+        AttributeModifier.Operation op;
+        switch (this) {
+            case RUBY_I:
+                attribute = Attribute.GENERIC_ATTACK_DAMAGE;
+                amount = weapon ? 0.01 : 20;
+                op = weapon ? AttributeModifier.Operation.MULTIPLY_SCALAR_1 : AttributeModifier.Operation.ADD_NUMBER;
+                break;
+            case RUBY_II:
+                attribute = Attribute.GENERIC_ATTACK_DAMAGE;
+                amount = weapon ? 0.02 : 30;
+                op = weapon ? AttributeModifier.Operation.MULTIPLY_SCALAR_1 : AttributeModifier.Operation.ADD_NUMBER;
+                break;
+            case RUBY_III:
+                attribute = Attribute.GENERIC_ATTACK_DAMAGE;
+                amount = weapon ? 0.03 : 40;
+                op = weapon ? AttributeModifier.Operation.MULTIPLY_SCALAR_1 : AttributeModifier.Operation.ADD_NUMBER;
+                break;
+
+            case AMETHYST_I:
+                attribute = Attribute.GENERIC_MAX_HEALTH;
+                amount = weapon ? 0.01 : 5;
+                op = weapon ? AttributeModifier.Operation.MULTIPLY_SCALAR_1 : AttributeModifier.Operation.ADD_NUMBER;
+                break;
+            case AMETHYST_II:
+                attribute = Attribute.GENERIC_MAX_HEALTH;
+                amount = weapon ? 0.02 : 10;
+                op = weapon ? AttributeModifier.Operation.MULTIPLY_SCALAR_1 : AttributeModifier.Operation.ADD_NUMBER;
+                break;
+            case AMETHYST_III:
+                attribute = Attribute.GENERIC_MAX_HEALTH;
+                amount = weapon ? 0.03 : 15;
+                op = weapon ? AttributeModifier.Operation.MULTIPLY_SCALAR_1 : AttributeModifier.Operation.ADD_NUMBER;
+                break;
+
+            case CYIANITE_I:
+                attribute = Attribute.GENERIC_ARMOR;
+                amount = weapon ? 0.01 : 2;
+                op = weapon ? AttributeModifier.Operation.MULTIPLY_SCALAR_1 : AttributeModifier.Operation.ADD_NUMBER;
+                break;
+            case CYIANITE_II:
+                attribute = Attribute.GENERIC_ARMOR;
+                amount = weapon ? 0.02 : 3;
+                op = weapon ? AttributeModifier.Operation.MULTIPLY_SCALAR_1 : AttributeModifier.Operation.ADD_NUMBER;
+                break;
+            case CYIANITE_III:
+                attribute = Attribute.GENERIC_ARMOR;
+                amount = weapon ? 0.03 : 4;
+                op = weapon ? AttributeModifier.Operation.MULTIPLY_SCALAR_1 : AttributeModifier.Operation.ADD_NUMBER;
+                break;
+
+            case ZIRCON_I:
+                attribute = Attribute.GENERIC_ATTACK_SPEED;
+                amount = weapon ? 0.25 : 0.05;
+                op = weapon ? AttributeModifier.Operation.ADD_NUMBER : AttributeModifier.Operation.MULTIPLY_SCALAR_1;
+                break;
+            case ZIRCON_II:
+                attribute = Attribute.GENERIC_ATTACK_SPEED;
+                amount = weapon ? 0.5 : 0.10;
+                op = weapon ? AttributeModifier.Operation.ADD_NUMBER : AttributeModifier.Operation.MULTIPLY_SCALAR_1;
+                break;
+            case ZIRCON_III:
+                attribute = Attribute.GENERIC_ATTACK_SPEED;
+                amount = weapon ? 0.75 : 0.15;
+                op = weapon ? AttributeModifier.Operation.ADD_NUMBER : AttributeModifier.Operation.MULTIPLY_SCALAR_1;
+                break;
+
+            case DIAMOND_I:
+                attribute = Attribute.GENERIC_ATTACK_DAMAGE;
+                amount = weapon ? 0.03 : 1;
+                op = weapon ? AttributeModifier.Operation.MULTIPLY_SCALAR_1 : AttributeModifier.Operation.ADD_NUMBER;
+                break;
+            case DIAMOND_II:
+                attribute = Attribute.GENERIC_ATTACK_DAMAGE;
+                amount = weapon ? 0.04 : 2;
+                op = weapon ? AttributeModifier.Operation.MULTIPLY_SCALAR_1 : AttributeModifier.Operation.ADD_NUMBER;
+                break;
+            case DIAMOND_III:
+                attribute = Attribute.GENERIC_ATTACK_DAMAGE;
+                amount = weapon ? 0.05 : 3;
+                op = weapon ? AttributeModifier.Operation.MULTIPLY_SCALAR_1 : AttributeModifier.Operation.ADD_NUMBER;
+                break;
+
+            case RHODOLITE_I:
+                attribute = Attribute.GENERIC_MOVEMENT_SPEED;
+                amount = weapon ? 0.05 : 0.01;
+                op = weapon ? AttributeModifier.Operation.ADD_NUMBER : AttributeModifier.Operation.MULTIPLY_SCALAR_1;
+                break;
+            case RHODOLITE_II:
+                attribute = Attribute.GENERIC_MOVEMENT_SPEED;
+                amount = weapon ? 0.1 : 0.02;
+                op = weapon ? AttributeModifier.Operation.ADD_NUMBER : AttributeModifier.Operation.MULTIPLY_SCALAR_1;
+                break;
+            case RHODOLITE_III:
+                attribute = Attribute.GENERIC_MOVEMENT_SPEED;
+                amount = weapon ? 0.15 : 0.03;
+                op = weapon ? AttributeModifier.Operation.ADD_NUMBER : AttributeModifier.Operation.MULTIPLY_SCALAR_1;
+                break;
+
+            case ONYX_I:
+                attribute = Attribute.GENERIC_LUCK;
+                amount = weapon ? 0.01 : 1;
+                op = weapon ? AttributeModifier.Operation.MULTIPLY_SCALAR_1 : AttributeModifier.Operation.ADD_NUMBER;
+                break;
+            case ONYX_II:
+                attribute = Attribute.GENERIC_LUCK;
+                amount = weapon ? 0.02 : 2;
+                op = weapon ? AttributeModifier.Operation.MULTIPLY_SCALAR_1 : AttributeModifier.Operation.ADD_NUMBER;
+                break;
+            case ONYX_III:
+                attribute = Attribute.GENERIC_LUCK;
+                amount = weapon ? 0.03 : 3;
+                op = weapon ? AttributeModifier.Operation.MULTIPLY_SCALAR_1 : AttributeModifier.Operation.ADD_NUMBER;
+                break;
+
+            default:
+                return;
+        }
+        AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), "gem_" + name(), amount, op, slot);
+        meta.addAttributeModifier(attribute, modifier);
+    }
+
+    public void removeAttributes(ItemMeta meta) {
+        if (meta == null) return;
+        Multimap<Attribute, AttributeModifier> modifiers = meta.getAttributeModifiers();
+        if (modifiers == null) return;
+        for (Attribute attribute : new HashSet<>(modifiers.keySet())) {
+            for (AttributeModifier modifier : new ArrayList<>(modifiers.get(attribute))) {
+                if (modifier.getName().equals("gem_" + name())) {
+                    meta.removeAttributeModifier(attribute, modifier);
+                }
+            }
+        }
+
     }
 
     public static GemType fromItem(ItemStack item) {

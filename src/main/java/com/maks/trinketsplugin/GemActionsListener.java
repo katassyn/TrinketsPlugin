@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -36,6 +37,14 @@ public class GemActionsListener implements Listener {
         return name.endsWith("_HELMET") || name.endsWith("_CHESTPLATE") || name.endsWith("_LEGGINGS") || name.endsWith("_BOOTS");
     }
 
+    private EquipmentSlot getArmorSlot(Material type) {
+        String name = type.name();
+        if (name.endsWith("_HELMET")) return EquipmentSlot.HEAD;
+        if (name.endsWith("_CHESTPLATE")) return EquipmentSlot.CHEST;
+        if (name.endsWith("_LEGGINGS")) return EquipmentSlot.LEGS;
+        if (name.endsWith("_BOOTS")) return EquipmentSlot.FEET;
+        return EquipmentSlot.CHEST;
+    }
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) return;
@@ -116,6 +125,9 @@ public class GemActionsListener implements Listener {
         lore.add(insertIndex, gemLore);
         if (meta != null) {
             meta.setLore(lore);
+            EquipmentSlot slot = weapon ? EquipmentSlot.HAND : getArmorSlot(item.getType());
+            gem.applyAttributes(meta, weapon, slot);
+
             item.setItemMeta(meta);
         }
         inv.setItem(11, null);
@@ -165,6 +177,8 @@ public class GemActionsListener implements Listener {
         lore.remove(removeLine);
         if (meta != null) {
             meta.setLore(lore);
+            found.removeAttributes(meta);
+
             item.setItemMeta(meta);
         }
         inv.setItem(13, null);
