@@ -628,6 +628,13 @@ public class JewelManager {
                 lore.add(ChatColor.translateAlternateColorCodes('&', "&7A dark jewel that whispers secrets"));
                 lore.add(ChatColor.translateAlternateColorCodes('&', "&7of locks and teaches nimble fingers."));
                 break;
+            case INGREDIENT:
+                int extraIngredients = tier == 1 ? 1 : tier == 2 ? 2 : 3;
+                lore.add(ChatColor.translateAlternateColorCodes('&', "&6Get +" + extraIngredients + " additional Ingredients"));
+                lore.add(ChatColor.translateAlternateColorCodes('&', "&6when picked up"));
+                lore.add(ChatColor.translateAlternateColorCodes('&', "&7A forager gem, blessed by the Hut,"));
+                lore.add(ChatColor.translateAlternateColorCodes('&', "&7guides hands to the freshest finds."));
+                break;
             case COLLECTOR:
                 double executeThreshold = tier == 1 ? 2 : tier == 2 ? 3 : 5;
                 lore.add(ChatColor.translateAlternateColorCodes('&', "&6Enemies below " + executeThreshold + "% HP"));

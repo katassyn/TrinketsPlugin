@@ -85,6 +85,7 @@ The plugin features a powerful jewel system that allows players to enhance their
    - Andermant Jewel: Chance to duplicate Andermant (10/20/30%)
    - Sunspire Amber: Get additional Gilded Sunflowers (1/2/3)
    - DrakenMelon Jewel: Get additional drakenmelons (1/2/3)
+   - Ingredient Jewel: Get additional ingredients (1/2/3)
    - Collector Jewel: Executes low health enemies (2/3/5% threshold)
 
 #### Commands
