@@ -17,3 +17,8 @@ commands:
   jewels:
     description: "Show info about jewels"
     usage: /jewels
+  gem_actions:
+    description: Open gem actions GUI
+    usage: /gem_actions
+    permission: mycraftingplugin.use
+    permission-message: You do not have permission to use this command.
