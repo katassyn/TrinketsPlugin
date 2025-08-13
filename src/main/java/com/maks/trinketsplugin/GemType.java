@@ -90,6 +90,7 @@ public enum GemType {
         String[] parts = source.split(":", 2);
         String bonus = parts.length > 1 ? parts[1].trim() : source;
         return ChatColor.translateAlternateColorCodes('&', display + " Socketed " + bonus) + ChatColor.RESET;
+
     }
 
     public void applyAttributes(ItemMeta meta, boolean weapon, EquipmentSlot slot) {
@@ -228,6 +229,7 @@ public enum GemType {
                 }
             }
         }
+
     }
 
     public static GemType fromItem(ItemStack item) {
