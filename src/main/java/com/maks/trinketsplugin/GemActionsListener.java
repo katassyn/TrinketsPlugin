@@ -32,6 +32,7 @@ public class GemActionsListener implements Listener {
         }
     }
 
+
     private void giveItem(Player player, ItemStack item) {
         if (item == null) return;
         Map<Integer, ItemStack> left = player.getInventory().addItem(item);
@@ -115,6 +116,7 @@ public class GemActionsListener implements Listener {
             giveItem(player, leftover);
             gemItem.setAmount(1);
         }
+
         GemType gem = GemType.fromItem(gemItem);
         if (gem == null) {
             player.sendMessage(ChatColor.RED + "Invalid gem.");
@@ -144,10 +146,12 @@ public class GemActionsListener implements Listener {
         }
         lore.add(insertIndex, gemLore);
         normalizeRarityLine(lore);
+
         if (meta != null) {
             meta.setLore(lore);
             EquipmentSlot slot = weapon ? EquipmentSlot.HAND : getArmorSlot(item.getType());
             gem.applyAttributes(meta, weapon, slot);
+
             item.setItemMeta(meta);
         }
         inv.setItem(11, null);
@@ -199,6 +203,7 @@ public class GemActionsListener implements Listener {
         if (meta != null) {
             meta.setLore(lore);
             found.removeAttributes(meta);
+
             item.setItemMeta(meta);
         }
         inv.setItem(13, null);
