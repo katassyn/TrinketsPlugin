@@ -19,6 +19,20 @@ import java.util.Map;
 
 public class GemActionsListener implements Listener {
 
+    private void normalizeRarityLine(List<String> lore) {
+        for (int i = 0; i < lore.size(); i++) {
+            String stripped = ChatColor.stripColor(lore.get(i));
+            if (stripped.startsWith("Rarity:")) {
+                String line = lore.get(i);
+                int resetIndex = line.indexOf(ChatColor.RESET.toString());
+                String suffix = resetIndex >= 0 ? line.substring(resetIndex + ChatColor.RESET.toString().length()) : line.substring(line.indexOf(":") + 1);
+                lore.set(i, ChatColor.WHITE.toString() + ChatColor.BOLD + "Rarity:" + ChatColor.RESET + suffix);
+                break;
+            }
+        }
+    }
+
+
     private void giveItem(Player player, ItemStack item) {
         if (item == null) return;
         Map<Integer, ItemStack> left = player.getInventory().addItem(item);
@@ -45,6 +59,7 @@ public class GemActionsListener implements Listener {
         if (name.endsWith("_BOOTS")) return EquipmentSlot.FEET;
         return EquipmentSlot.CHEST;
     }
+
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) return;
@@ -95,6 +110,13 @@ public class GemActionsListener implements Listener {
             player.sendMessage(ChatColor.RED + "Place an item and a gem.");
             return;
         }
+        if (gemItem.getAmount() > 1) {
+            ItemStack leftover = gemItem.clone();
+            leftover.setAmount(gemItem.getAmount() - 1);
+            giveItem(player, leftover);
+            gemItem.setAmount(1);
+        }
+
         GemType gem = GemType.fromItem(gemItem);
         if (gem == null) {
             player.sendMessage(ChatColor.RED + "Invalid gem.");
@@ -123,6 +145,8 @@ public class GemActionsListener implements Listener {
             }
         }
         lore.add(insertIndex, gemLore);
+        normalizeRarityLine(lore);
+
         if (meta != null) {
             meta.setLore(lore);
             EquipmentSlot slot = weapon ? EquipmentSlot.HAND : getArmorSlot(item.getType());
@@ -175,6 +199,7 @@ public class GemActionsListener implements Listener {
         }
         econ.withdrawPlayer(player, cost);
         lore.remove(removeLine);
+        normalizeRarityLine(lore);
         if (meta != null) {
             meta.setLore(lore);
             found.removeAttributes(meta);

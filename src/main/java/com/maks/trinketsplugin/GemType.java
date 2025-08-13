@@ -9,6 +9,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
 import com.google.common.collect.Multimap;
 
 import java.util.*;
@@ -88,7 +89,8 @@ public enum GemType {
         String source = weapon ? weaponLore : armorLore;
         String[] parts = source.split(":", 2);
         String bonus = parts.length > 1 ? parts[1].trim() : source;
-        return ChatColor.translateAlternateColorCodes('&', display + " Socketed " + bonus + "&r");
+        return ChatColor.translateAlternateColorCodes('&', display + " Socketed " + bonus) + ChatColor.RESET;
+
     }
 
     public void applyAttributes(ItemMeta meta, boolean weapon, EquipmentSlot slot) {
