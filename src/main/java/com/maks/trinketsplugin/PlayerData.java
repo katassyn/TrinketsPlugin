@@ -22,6 +22,9 @@ public class PlayerData {
     // Added field for jewels
     private EnumMap<JewelType, ItemStack> jewels = new EnumMap<>(JewelType.class);
 
+    // List of equipped runes (up to 9 slots)
+    private List<ItemStack> runes = new ArrayList<>();
+
     // Accumulated blockChance and blockStrength from all equipped accessories
     private int blockChance = 0;   // Total Block Chance (%)
     private int blockStrength = 0; // Total Block Strength (%)
@@ -71,6 +74,23 @@ public class PlayerData {
             }
         }
         return count;
+    }
+
+    // Methods for runes
+    public List<ItemStack> getRunes() {
+        return Collections.unmodifiableList(runes);
+    }
+
+    public void addRune(ItemStack item) {
+        if (runes.size() < 9) {
+            runes.add(item);
+        }
+    }
+
+    public void removeRune(int index) {
+        if (index >= 0 && index < runes.size()) {
+            runes.remove(index);
+        }
     }
 
     // Recalculate total blockChance and blockStrength from all equipped accessories
@@ -230,6 +250,17 @@ public class PlayerData {
             }
         }
 
+        // Serialize runes
+        for (int i = 0; i < runes.size(); i++) {
+            ItemStack rune = runes.get(i);
+            try {
+                String itemData = ItemSerializationUtils.itemStackToBase64(rune);
+                sb.append("RUNE_").append(i).append(":").append(itemData).append(";");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         // Serialize blockChance and blockStrength
         sb.append("blockChance=").append(blockChance).append(";");
         sb.append("blockStrength=").append(blockStrength).append(";");
@@ -272,6 +303,17 @@ public class PlayerData {
                     if (debuggingFlag == 1) {
                         System.out.println("[PlayerData] Deserialized jewel: " + jewelType);
                     }
+                } catch (IllegalArgumentException | IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (entry.startsWith("RUNE_")) {
+                // Deserialize runes
+                String[] parts = entry.split(":", 2);
+                if (parts.length < 2) continue;
+
+                try {
+                    ItemStack item = ItemSerializationUtils.itemStackFromBase64(parts[1]);
+                    runes.add(item);
                 } catch (IllegalArgumentException | IOException e) {
                     e.printStackTrace();
                 }
