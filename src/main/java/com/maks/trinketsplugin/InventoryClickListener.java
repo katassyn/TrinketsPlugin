@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import java.util.List;
 
 public class InventoryClickListener implements Listener {
 
@@ -29,7 +30,7 @@ public class InventoryClickListener implements Listener {
             if (itemName.equals("Accessories")) {
                 TrinketsGUI.openAccessoriesMenu(player);
             } else if (itemName.equals("Runes")) {
-                // Future implementation
+                RunesGUI.openRunesMenu(player);
             } else if (itemName.equals("Gems")) {
                 // Future implementation
             } else if (itemName.equals("Jewels")) {
@@ -119,6 +120,27 @@ public class InventoryClickListener implements Listener {
                 TrinketsPlugin.getInstance().getJewelManager().unequipJewel(player, type);
                 // Refresh the focus jewels menu
                 JewelsGUI.openFocusJewelsMenu(player);
+            }
+        } else if (title.equals("Runes")) {
+            event.setCancelled(true);
+
+            ItemStack clickedItem = event.getCurrentItem();
+            if (clickedItem == null || clickedItem.getType() == Material.AIR) return;
+
+            // If it's a locked or empty slot, do nothing
+            if (clickedItem.getType().toString().contains("GLASS_PANE") ||
+                clickedItem.getType() == Material.BARRIER) return;
+
+            int slot = event.getSlot();
+            PlayerData data = TrinketsPlugin.getInstance().getDatabaseManager().getPlayerData(player.getUniqueId());
+            List<ItemStack> runes = new java.util.ArrayList<>(data.getRunes());
+
+            if (slot < runes.size()) {
+                ItemStack rune = runes.remove(slot);
+                player.getInventory().addItem(rune);
+                data.removeRune(slot);
+                TrinketsPlugin.getInstance().getDatabaseManager().savePlayerData(player.getUniqueId(), data);
+                RunesGUI.openRunesMenu(player);
             }
         }
     }

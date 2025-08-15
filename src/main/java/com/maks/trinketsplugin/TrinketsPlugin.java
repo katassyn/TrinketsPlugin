@@ -16,6 +16,7 @@ public class TrinketsPlugin extends JavaPlugin {
     private File blokadyFile;
     private FileConfiguration blokadyConfig;
     private JewelManager jewelManager;
+    private RuneManager runeManager;
     private OffhandListener offhandListener;
     private static final int debuggingFlag = 1;
 
@@ -39,6 +40,12 @@ public class TrinketsPlugin extends JavaPlugin {
             saveResource("jewels.yml", false);
         }
 
+        // Create runes.yml if it doesn't exist
+        File runesFile = new File(getDataFolder(), "runes.yml");
+        if (!runesFile.exists()) {
+            saveResource("runes.yml", false);
+        }
+
         // Initialize DatabaseManager
         databaseManager = new DatabaseManager();
 
@@ -50,6 +57,7 @@ public class TrinketsPlugin extends JavaPlugin {
 
         // Initialize JewelManager
         jewelManager = new JewelManager(this);
+        runeManager = new RuneManager(this);
 
         // Initialize JewelAPI
         JewelAPI.initialize(this);
@@ -132,6 +140,10 @@ public class TrinketsPlugin extends JavaPlugin {
 
     public JewelManager getJewelManager() {
         return jewelManager;
+    }
+
+    public RuneManager getRuneManager() {
+        return runeManager;
     }
 
     public OffhandListener getOffhandListener() {
