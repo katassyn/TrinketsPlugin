@@ -143,6 +143,7 @@ public class InventoryClickListener implements Listener {
                     TrinketsPlugin.getInstance().getRuneEffectsListener().updateLuck(player);
                     RunesGUI.openRunesMenu(player);
                 }
+
             }
         }
     }
