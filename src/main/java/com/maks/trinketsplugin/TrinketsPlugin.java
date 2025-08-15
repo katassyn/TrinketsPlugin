@@ -17,6 +17,8 @@ public class TrinketsPlugin extends JavaPlugin {
     private FileConfiguration blokadyConfig;
     private JewelManager jewelManager;
     private RuneManager runeManager;
+    private RuneEffectsListener runeEffectsListener;
+
     private OffhandListener offhandListener;
     private static final int debuggingFlag = 1;
 
@@ -58,6 +60,8 @@ public class TrinketsPlugin extends JavaPlugin {
         // Initialize JewelManager
         jewelManager = new JewelManager(this);
         runeManager = new RuneManager(this);
+        runeEffectsListener = new RuneEffectsListener(this);
+
 
         // Initialize JewelAPI
         JewelAPI.initialize(this);
@@ -78,6 +82,7 @@ public class TrinketsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerDamageListener(), this); // Register the new listener
+        getServer().getPluginManager().registerEvents(runeEffectsListener, this);
         offhandListener = new OffhandListener(this);
         getServer().getPluginManager().registerEvents(offhandListener, this);
         getServer().getPluginManager().registerEvents(new JewelEvents(this, jewelManager), this);
@@ -100,6 +105,7 @@ public class TrinketsPlugin extends JavaPlugin {
 
                 // Apply jewel attributes
                 jewelManager.applyJewelAttributes(player, data);
+                runeEffectsListener.updateLuck(player);
 
                 // Ensure accessories in hands don't grant attributes
                 offhandListener.updateOffhand(player);
@@ -145,6 +151,11 @@ public class TrinketsPlugin extends JavaPlugin {
     public RuneManager getRuneManager() {
         return runeManager;
     }
+
+    public RuneEffectsListener getRuneEffectsListener() {
+        return runeEffectsListener;
+    }
+
 
     public OffhandListener getOffhandListener() {
         return offhandListener;

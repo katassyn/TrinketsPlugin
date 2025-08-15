@@ -18,5 +18,6 @@ public class PlayerJoinListener implements Listener {
         PlayerData data = TrinketsPlugin.getInstance().getDatabaseManager().getPlayerData(player.getUniqueId());
         data.removeAllAttributes(player);
         data.applyAllAttributes(player);
+        TrinketsPlugin.getInstance().getRuneEffectsListener().updateLuck(player);
     }
 }

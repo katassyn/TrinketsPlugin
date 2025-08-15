@@ -135,13 +135,15 @@ public class InventoryClickListener implements Listener {
             PlayerData data = TrinketsPlugin.getInstance().getDatabaseManager().getPlayerData(player.getUniqueId());
             List<ItemStack> runes = new java.util.ArrayList<>(data.getRunes());
 
-            if (slot < runes.size()) {
-                ItemStack rune = runes.remove(slot);
-                player.getInventory().addItem(rune);
-                data.removeRune(slot);
-                TrinketsPlugin.getInstance().getDatabaseManager().savePlayerData(player.getUniqueId(), data);
-                RunesGUI.openRunesMenu(player);
+                if (slot < runes.size()) {
+                    ItemStack rune = runes.remove(slot);
+                    player.getInventory().addItem(rune);
+                    data.removeRune(slot);
+                    TrinketsPlugin.getInstance().getDatabaseManager().savePlayerData(player.getUniqueId(), data);
+                    TrinketsPlugin.getInstance().getRuneEffectsListener().updateLuck(player);
+                    RunesGUI.openRunesMenu(player);
+                }
+
             }
         }
     }
-}
