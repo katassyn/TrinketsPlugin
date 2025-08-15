@@ -17,8 +17,6 @@ import org.bukkit.event.player.PlayerToggleSprintEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionEffectTypeCategory;
-
 
 import java.util.*;
 
@@ -129,7 +127,7 @@ public class RuneEffectsListener implements Listener {
         int berkanoValue = getRuneEffect(data, "Berkano", 1, 1, 1);
         if (berkanoValue > 0 && healthAfter <= max * 0.3 && now >= berkanoCooldown.getOrDefault(id, 0L)) {
             for (PotionEffect effect : player.getActivePotionEffects()) {
-                if (effect.getType().getCategory() == PotionEffectTypeCategory.HARMFUL) {
+                if (isNegativeEffect(effect.getType())) {
 
                     player.removePotionEffect(effect.getType());
                     break;
@@ -258,5 +256,26 @@ public class RuneEffectsListener implements Listener {
         }
         return total;
     }
+
+    private static final Set<PotionEffectType> NEGATIVE_EFFECTS = EnumSet.of(
+            PotionEffectType.BLINDNESS,
+            PotionEffectType.CONFUSION,
+            PotionEffectType.HARM,
+            PotionEffectType.HUNGER,
+            PotionEffectType.LEVITATION,
+            PotionEffectType.POISON,
+            PotionEffectType.SLOW,
+            PotionEffectType.SLOW_DIGGING,
+            PotionEffectType.UNLUCK,
+            PotionEffectType.WEAKNESS,
+            PotionEffectType.WITHER,
+            PotionEffectType.BAD_OMEN,
+            PotionEffectType.DARKNESS
+    );
+
+    private boolean isNegativeEffect(PotionEffectType type) {
+        return NEGATIVE_EFFECTS.contains(type);
+    }
+
 }
 
