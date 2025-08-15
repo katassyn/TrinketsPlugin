@@ -18,6 +18,7 @@ public class TrinketsPlugin extends JavaPlugin {
     private JewelManager jewelManager;
     private RuneManager runeManager;
     private RuneEffectsListener runeEffectsListener;
+
     private OffhandListener offhandListener;
     private static final int debuggingFlag = 1;
 
@@ -60,6 +61,7 @@ public class TrinketsPlugin extends JavaPlugin {
         jewelManager = new JewelManager(this);
         runeManager = new RuneManager(this);
         runeEffectsListener = new RuneEffectsListener(this);
+
 
         // Initialize JewelAPI
         JewelAPI.initialize(this);
@@ -153,6 +155,7 @@ public class TrinketsPlugin extends JavaPlugin {
     public RuneEffectsListener getRuneEffectsListener() {
         return runeEffectsListener;
     }
+
 
     public OffhandListener getOffhandListener() {
         return offhandListener;

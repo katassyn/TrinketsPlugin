@@ -51,6 +51,7 @@ public class RuneManager {
         plugin.getDatabaseManager().savePlayerData(uuid, data);
         plugin.getRuneEffectsListener().updateLuck(player);
 
+
         if (player.getInventory().getItemInMainHand().equals(item)) {
             ItemStack hand = player.getInventory().getItemInMainHand().clone();
             hand.setAmount(hand.getAmount() - 1);
