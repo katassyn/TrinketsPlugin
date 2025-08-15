@@ -30,6 +30,9 @@ public class PlayerInteractListener implements Listener {
                 // Equip the jewel
                 TrinketsPlugin.getInstance().getJewelManager().equipJewel(player, item);
                 event.setCancelled(true);
+            } else if (isRuneItem(item)) {
+                TrinketsPlugin.getInstance().getRuneManager().equipRune(player, item);
+                event.setCancelled(true);
             }
         }
     }
@@ -54,6 +57,10 @@ public class PlayerInteractListener implements Listener {
     private boolean isJewelItem(ItemStack item) {
         // Use JewelManager to check if the item is a jewel
         return TrinketsPlugin.getInstance().getJewelManager().isJewel(item);
+    }
+
+    private boolean isRuneItem(ItemStack item) {
+        return TrinketsPlugin.getInstance().getRuneManager().isRune(item);
     }
 
 
