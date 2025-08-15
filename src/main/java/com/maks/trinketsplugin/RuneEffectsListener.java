@@ -17,6 +17,8 @@ import org.bukkit.event.player.PlayerToggleSprintEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionEffectTypeCategory;
+
 
 import java.util.*;
 
@@ -127,7 +129,8 @@ public class RuneEffectsListener implements Listener {
         int berkanoValue = getRuneEffect(data, "Berkano", 1, 1, 1);
         if (berkanoValue > 0 && healthAfter <= max * 0.3 && now >= berkanoCooldown.getOrDefault(id, 0L)) {
             for (PotionEffect effect : player.getActivePotionEffects()) {
-                if (effect.getType().isBad()) {
+                if (effect.getType().getCategory() == PotionEffectTypeCategory.HARMFUL) {
+
                     player.removePotionEffect(effect.getType());
                     break;
                 }
