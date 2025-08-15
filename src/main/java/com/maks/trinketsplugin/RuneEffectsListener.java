@@ -257,7 +257,8 @@ public class RuneEffectsListener implements Listener {
         return total;
     }
 
-    private static final Set<PotionEffectType> NEGATIVE_EFFECTS = EnumSet.of(
+    private static final Set<PotionEffectType> NEGATIVE_EFFECTS = Set.of(
+
             PotionEffectType.BLINDNESS,
             PotionEffectType.CONFUSION,
             PotionEffectType.HARM,
