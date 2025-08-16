@@ -10,6 +10,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -530,6 +531,44 @@ public class JewelEvents implements Listener {
                 Bukkit.getLogger().info("[JewelEvents] Extra ingredients given to player: " +
                         player.getName() + ", amount: " + extraAmount);
             }
+        }
+    }
+
+    @EventHandler
+    public void onFishReward(Event event) {
+        if (!event.getClass().getName().equals("org.maks.fishingPlugin.api.FishRewardEvent")) {
+            return;
+        }
+        try {
+            Player player = (Player) event.getClass().getMethod("getPlayer").invoke(event);
+            Object itemObj = event.getClass().getMethod("getItem").invoke(event);
+            if (!(itemObj instanceof ItemStack)) {
+                return;
+            }
+            ItemStack item = (ItemStack) itemObj;
+            if (item == null) {
+                return;
+            }
+
+            PlayerData data = plugin.getDatabaseManager().getPlayerData(player.getUniqueId());
+            if (data == null) {
+                return;
+            }
+
+            ItemStack fishJewel = data.getJewel(JewelType.GOLDEN_FISH);
+            if (fishJewel == null) {
+                return;
+            }
+
+            int tier = jewelManager.getJewelTier(fishJewel);
+            int chance = tier == 1 ? 30 : tier == 2 ? 40 : 50;
+
+            if (random.nextInt(100) < chance) {
+                ItemStack duplicate = item.clone();
+                player.getInventory().addItem(duplicate);
+                sendActionBar(player, ChatColor.GREEN + "Your Golden Fish Jewel doubled the catch!");
+            }
+        } catch (Exception ignored) {
         }
     }
 

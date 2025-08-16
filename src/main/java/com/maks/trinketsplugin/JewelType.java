@@ -21,7 +21,8 @@ public enum JewelType {
     DRAKENMELON("Melonbane Prism", Material.SUGAR, "Get additional drakenmelons", 3),
     LOCKPICK("Shadowpick Onyx", Material.FEATHER, "Get additional lockpicks", 3),
     INGREDIENT("Ingredient Jewel", Material.PRISMARINE_SHARD, "Get additional ingredients", 3),
-    COLLECTOR("Deathcut Garnet", Material.GHAST_TEAR, "Finishes off low health enemies", 3);
+    COLLECTOR("Deathcut Garnet", Material.GHAST_TEAR, "Finishes off low health enemies", 3),
+    GOLDEN_FISH("Golden Fish Jewel", Material.WHEAT, "Chance to double fishing loot", 3);
 
     private final String displayName;
     private final Material material;
