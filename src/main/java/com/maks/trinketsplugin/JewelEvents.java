@@ -534,8 +534,7 @@ public class JewelEvents implements Listener {
         }
     }
 
-    @EventHandler
-    public void onFishReward(Event event) {
+    public void handleFishReward(Event event) {
         if (!event.getClass().getName().equals("org.maks.fishingPlugin.api.FishRewardEvent")) {
             return;
         }
