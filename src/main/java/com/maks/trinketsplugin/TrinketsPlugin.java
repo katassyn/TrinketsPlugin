@@ -7,6 +7,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventPriority;
+import org.bukkit.plugin.EventExecutor;
 
 import java.io.File;
 
@@ -85,7 +88,20 @@ public class TrinketsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(runeEffectsListener, this);
         offhandListener = new OffhandListener(this);
         getServer().getPluginManager().registerEvents(offhandListener, this);
-        getServer().getPluginManager().registerEvents(new JewelEvents(this, jewelManager), this);
+        JewelEvents jewelEvents = new JewelEvents(this, jewelManager);
+        getServer().getPluginManager().registerEvents(jewelEvents, this);
+        try {
+            Class<? extends Event> fishEvent = (Class<? extends Event>) Class.forName("org.maks.fishingPlugin.api.FishRewardEvent");
+            getServer().getPluginManager().registerEvent(
+                    fishEvent,
+                    jewelEvents,
+                    EventPriority.NORMAL,
+                    (EventExecutor) (listener, event) -> ((JewelEvents) listener).handleFishReward(event),
+                    this,
+                    true
+            );
+        } catch (ClassNotFoundException ignored) {
+        }
         getServer().getPluginManager().registerEvents(new Q1SoulEffect(this), this);
         getServer().getPluginManager().registerEvents(new Q2SoulEffect(this), this);
         getServer().getPluginManager().registerEvents(new Q3SoulEffect(this), this);

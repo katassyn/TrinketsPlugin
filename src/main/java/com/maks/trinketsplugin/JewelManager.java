@@ -642,6 +642,13 @@ public class JewelManager {
                 lore.add(ChatColor.translateAlternateColorCodes('&', "&7A crystallized tear that hungers for"));
                 lore.add(ChatColor.translateAlternateColorCodes('&', "&7the souls of the nearly dead."));
                 break;
+            case GOLDEN_FISH:
+                int fishChance = tier == 1 ? 30 : tier == 2 ? 40 : 50;
+                lore.add(ChatColor.translateAlternateColorCodes('&', "&6Have a " + fishChance + "% chance"));
+                lore.add(ChatColor.translateAlternateColorCodes('&', "&6to double the caught item at Fishing Pool"));
+                lore.add(ChatColor.translateAlternateColorCodes('&', "&7A charm gilded by the tides,"));
+                lore.add(ChatColor.translateAlternateColorCodes('&', "&7blessing lucky hauls from the deep."));
+                break;
         }
 
         lore.add("");

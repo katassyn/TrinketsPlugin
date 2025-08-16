@@ -244,3 +244,17 @@ jewels:
         execute_threshold_percent: 3
       tier3:
         execute_threshold_percent: 5
+
+  GOLDEN_FISH:
+    display_name: "Golden Fish Jewel"
+    material: WHEAT
+    description: "Chance to double the caught item at Fishing Pool"
+    max_tier: 3
+    max_equipped: 1
+    effects:
+      tier1:
+        double_chance_percent: 30
+      tier2:
+        double_chance_percent: 40
+      tier3:
+        double_chance_percent: 50
