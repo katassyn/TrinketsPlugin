@@ -25,7 +25,11 @@ public class RunicWordManager {
             return null;
         }
         for (String line : meta.getLore()) {
-            String stripped = ChatColor.stripColor(line);
+            String stripped = ChatColor.stripColor(line)
+                    .replace("â€™", "'")
+                    .replace("\u2019", "'")
+                    .replace("`", "'");
+
             if (stripped.startsWith("Runic Word: ")) {
                 String name = stripped.substring("Runic Word: ".length()).trim();
                 for (RunicWord word : RunicWord.values()) {
@@ -45,7 +49,19 @@ public class RunicWordManager {
         if (item == null || word == null) return;
         ItemMeta meta = item.getItemMeta();
         List<String> lore = meta != null && meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
-        lore.add(LORE_PREFIX + word.getDisplayName());
+        // ensure only one runic word line
+        lore.removeIf(line -> ChatColor.stripColor(line).startsWith("Runic Word:"));
+        String runicLore = LORE_PREFIX + word.getDisplayName() + ChatColor.RESET;
+        int insertIndex = lore.size();
+        for (int i = 0; i < lore.size(); i++) {
+            if (ChatColor.stripColor(lore.get(i)).toLowerCase().contains("rarity:")) {
+                insertIndex = i;
+                break;
+            }
+        }
+        lore.add(insertIndex, runicLore);
+        normalizeRarityLine(lore);
+
         if (meta != null) {
             meta.setLore(lore);
             item.setItemMeta(meta);
@@ -61,7 +77,36 @@ public class RunicWordManager {
         if (!meta.hasLore()) return;
         List<String> lore = new ArrayList<>(meta.getLore());
         lore.removeIf(line -> ChatColor.stripColor(line).startsWith("Runic Word:"));
+        normalizeRarityLine(lore);
         meta.setLore(lore);
         item.setItemMeta(meta);
     }
+
+    /**
+     * Ensures the rarity line retains formatting and duplicates are removed.
+     */
+    private static void normalizeRarityLine(List<String> lore) {
+        boolean found = false;
+        for (int i = 0; i < lore.size();) {
+            String stripped = ChatColor.stripColor(lore.get(i)).trim().toLowerCase();
+            if (stripped.startsWith("rarity:")) {
+                if (!found) {
+                    String line = lore.get(i);
+                    int idx = line.toLowerCase().indexOf("rarity:");
+                    String suffix = line.substring(idx + "rarity:".length());
+                    if (suffix.startsWith(ChatColor.RESET.toString())) {
+                        suffix = suffix.substring(ChatColor.RESET.toString().length());
+                    }
+                    lore.set(i, ChatColor.WHITE.toString() + ChatColor.BOLD + "Rarity:" + ChatColor.RESET + suffix);
+                    found = true;
+                    i++;
+                } else {
+                    lore.remove(i);
+                }
+            } else {
+                i++;
+            }
+        }
+    }
+
 }

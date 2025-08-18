@@ -43,7 +43,11 @@ public enum RunicWord {
         if (item == null || !item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
             return null;
         }
-        String stripped = ChatColor.stripColor(item.getItemMeta().getDisplayName());
+        String stripped = ChatColor.stripColor(item.getItemMeta().getDisplayName())
+                .replace("â€™", "'")
+                .replace("\u2019", "'")
+                .replace("`", "'");
+
         for (RunicWord word : values()) {
             if (stripped.contains(word.displayName)) {
                 return word;
