@@ -100,6 +100,14 @@ public class ConjurationListener implements Listener {
         }
         econ.withdrawPlayer(player, cost);
         RunicWordManager.applyRunicWord(weapon, word);
+
+        int leftoverAmount = wordItem.getAmount() - 1;
+        if (leftoverAmount > 0) {
+            ItemStack leftover = wordItem.clone();
+            leftover.setAmount(leftoverAmount);
+            giveItem(player, leftover);
+        }
+
         inv.setItem(11, null);
         inv.setItem(15, null);
         giveItem(player, weapon);
