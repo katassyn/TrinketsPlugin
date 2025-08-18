@@ -113,6 +113,8 @@ public class TrinketsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new Q9SoulEffect(this), this);
         getServer().getPluginManager().registerEvents(new Q10SoulEffect(this), this);
         getServer().getPluginManager().registerEvents(new GemActionsListener(), this);
+        getServer().getPluginManager().registerEvents(new ConjurationListener(), this);
+        getServer().getPluginManager().registerEvents(new RunicWordEffectsListener(this), this);
         // Load data for already logged-in players
         for (Player player : Bukkit.getOnlinePlayers()) {
             getDatabaseManager().loadPlayerData(player.getUniqueId(), data -> {
@@ -137,6 +139,7 @@ public class TrinketsPlugin extends JavaPlugin {
         getCommand("soul").setExecutor(new SoulCommand());
         getCommand("jewels").setExecutor(new JewelsCommand());
         getCommand("gem_actions").setExecutor(new GemActionsCommand());
+        getCommand("conjuration_menu").setExecutor(new ConjurationCommand());
 
     }
 
