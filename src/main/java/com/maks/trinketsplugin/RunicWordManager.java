@@ -29,6 +29,7 @@ public class RunicWordManager {
                     .replace("â€™", "'")
                     .replace("\u2019", "'")
                     .replace("`", "'");
+
             if (stripped.startsWith("Runic Word: ")) {
                 String name = stripped.substring("Runic Word: ".length()).trim();
                 for (RunicWord word : RunicWord.values()) {
@@ -60,6 +61,7 @@ public class RunicWordManager {
         }
         lore.add(insertIndex, runicLore);
         normalizeRarityLine(lore);
+
         if (meta != null) {
             meta.setLore(lore);
             item.setItemMeta(meta);
@@ -106,4 +108,5 @@ public class RunicWordManager {
             }
         }
     }
+
 }

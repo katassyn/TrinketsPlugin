@@ -91,6 +91,7 @@ public class ConjurationListener implements Listener {
             player.sendMessage(ChatColor.RED + "Weapon already has a runic word.");
             return;
         }
+
         Economy econ = TrinketsPlugin.getEconomy();
         double cost = 100_000_000d;
         if (econ.getBalance(player) < cost) {

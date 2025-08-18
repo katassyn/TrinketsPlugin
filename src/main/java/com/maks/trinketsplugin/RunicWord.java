@@ -47,6 +47,7 @@ public enum RunicWord {
                 .replace("â€™", "'")
                 .replace("\u2019", "'")
                 .replace("`", "'");
+
         for (RunicWord word : values()) {
             if (stripped.contains(word.displayName)) {
                 return word;
