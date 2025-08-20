@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.ItemFlag;
 
 public class ConjurationGUI {
     public static final String TITLE_MAIN = ChatColor.DARK_PURPLE + "Conjuration";
@@ -28,6 +29,7 @@ public class ConjurationGUI {
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
             meta.setDisplayName(name);
+            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
             item.setItemMeta(meta);
         }
         return item;
