@@ -204,6 +204,9 @@ public class AugmenterListener implements Listener {
             baseLore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
             pdc.set(loreKey, PersistentDataType.STRING, String.join("\n", baseLore));
         }
+        if (!baseLore.isEmpty() && ChatColor.stripColor(baseLore.get(0)).trim().isEmpty()) {
+            baseLore.remove(0);
+        }
 
         List<String> newLore = new ArrayList<>();
         ChatColor color = percent >= 0 ? ChatColor.GREEN : ChatColor.RED;
