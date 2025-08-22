@@ -27,3 +27,8 @@ commands:
     usage: /conjuration_menu
     permission: mycraftingplugin.use
     permission-message: You do not have permission to use this command.
+  augmenter:
+    description: Open quality augmenter GUI
+    usage: /augmenter
+    permission: mycraftingplugin.use
+    permission-message: You do not have permission to use this command.
