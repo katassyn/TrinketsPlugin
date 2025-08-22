@@ -239,6 +239,10 @@ public class DatabaseManager {
             itemToRemove.setAmount(1);
             player.getInventory().removeItem(itemToRemove);
 
+            // Refresh main hand and offhand to clear negative modifiers
+            TrinketsPlugin.getInstance().getOffhandListener().updateMainHand(player);
+            TrinketsPlugin.getInstance().getOffhandListener().updateOffhand(player);
+
             String accessoryName = (restrictedAccessory != null) ? restrictedAccessory.getDisplayName() : type.getDisplayName();
             player.sendMessage("You have equipped the " + accessoryName + "!");
 
@@ -265,6 +269,7 @@ public class DatabaseManager {
             ItemStack accessoryToReturn = item.clone();
             accessoryToReturn.setAmount(1);
             player.getInventory().addItem(accessoryToReturn);
+            TrinketsPlugin.getInstance().getOffhandListener().updateMainHand(player);
             TrinketsPlugin.getInstance().getOffhandListener().updateOffhand(player);
 
             player.sendMessage("You have unequipped the " + type.getDisplayName() + ".");
