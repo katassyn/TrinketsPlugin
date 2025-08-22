@@ -115,6 +115,7 @@ public class TrinketsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new GemActionsListener(), this);
         getServer().getPluginManager().registerEvents(new ConjurationListener(), this);
         getServer().getPluginManager().registerEvents(new RunicWordEffectsListener(this), this);
+        getServer().getPluginManager().registerEvents(new AugmenterListener(), this);
         // Load data for already logged-in players
         for (Player player : Bukkit.getOnlinePlayers()) {
             getDatabaseManager().loadPlayerData(player.getUniqueId(), data -> {
@@ -140,6 +141,7 @@ public class TrinketsPlugin extends JavaPlugin {
         getCommand("jewels").setExecutor(new JewelsCommand());
         getCommand("gem_actions").setExecutor(new GemActionsCommand());
         getCommand("conjuration_menu").setExecutor(new ConjurationCommand());
+        getCommand("augmenter").setExecutor(new AugmenterCommand());
 
     }
 
