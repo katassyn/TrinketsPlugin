@@ -19,7 +19,7 @@ public class AugmenterCommand implements CommandExecutor {
             return true;
         }
         if (player.getLevel() < 75) {
-            player.sendMessage(ChatColor.RED + "You must be at least level 75 to use the augmenter.");
+            player.sendMessage(ChatColor.RED + "You must be at least level 75!");
             return true;
         }
         AugmenterGUI.openMainMenu(player);
