@@ -19,10 +19,10 @@ public final class ProtectionReductionCalculator {
         FileConfiguration config = plugin.getConfig();
 
         int baseLevel = Math.max(0, config.getInt("protection-curve.base-level", 16));
-        double baseReduction = clamp01(config.getDouble("protection-curve.base-reduction", 0.64));
+        double baseReduction = clamp01(config.getDouble("protection-curve.base-reduction", 0.50));
         double maxCap = clamp01(config.getDouble("protection-curve.max-cap", 0.80));
         int maxTotal = Math.max(0, config.getInt("protection-curve.max-total-level", 800));
-        double kFactor = Math.max(0.0, config.getDouble("protection-curve.k-factor", 0.102));
+        double kFactor = Math.max(0.0, config.getDouble("protection-curve.k-factor", 0.1913));
 
         int totalProtection = Math.max(0, getTotalProtectionLevel(player));
         int cappedTotalProtection = maxTotal > 0 ? Math.min(totalProtection, maxTotal) : totalProtection;
@@ -66,7 +66,14 @@ public final class ProtectionReductionCalculator {
             return 0.0;
         }
         ProtectionStats stats = calculate(player);
-        return Math.max(0.0, baseDamage * stats.finalDamageMultiplier());
+        // The Bukkit damage event already contains the vanilla protection reduction, so we
+        // compensate for it here and only apply the additional scaling from the custom curve.
+        double vanillaMultiplier = 1.0 - stats.baseReductionApplied();
+        if (vanillaMultiplier <= 0.0) {
+            return 0.0;
+        }
+        double adjustedMultiplier = stats.finalDamageMultiplier() / vanillaMultiplier;
+        return Math.max(0.0, baseDamage * adjustedMultiplier);
     }
 
     public static int getTotalProtectionLevel(Player player) {
