@@ -25,6 +25,9 @@ public class PlayerData {
     // List of equipped runes (up to 9 slots)
     private List<ItemStack> runes = new ArrayList<>();
 
+    // Added field for unique trinkets
+    private EnumMap<UniqueTrinketType, ItemStack> uniqueTrinkets = new EnumMap<>(UniqueTrinketType.class);
+
     // Accumulated blockChance and blockStrength from all equipped accessories
     private int blockChance = 0;   // Total Block Chance (%)
     private int blockStrength = 0; // Total Block Strength (%)
@@ -90,6 +93,118 @@ public class PlayerData {
     public void removeRune(int index) {
         if (index >= 0 && index < runes.size()) {
             runes.remove(index);
+        }
+    }
+
+    // Methods for unique trinkets
+    public ItemStack getUniqueTrinket(UniqueTrinketType type) {
+        return uniqueTrinkets.get(type);
+    }
+
+    public void setUniqueTrinket(UniqueTrinketType type, ItemStack item) {
+        uniqueTrinkets.put(type, item);
+    }
+
+    public void removeUniqueTrinket(UniqueTrinketType type) {
+        uniqueTrinkets.remove(type);
+    }
+
+    public Map<UniqueTrinketType, ItemStack> getAllUniqueTrinkets() {
+        return Collections.unmodifiableMap(uniqueTrinkets);
+    }
+
+    // Apply unique trinket attributes
+    public void applyUniqueTrinketAttributes(Player player) {
+        for (Map.Entry<UniqueTrinketType, ItemStack> entry : uniqueTrinkets.entrySet()) {
+            UniqueTrinketType type = entry.getKey();
+            ItemStack item = entry.getValue();
+            applyUniqueTrinketAttribute(player, item, type);
+        }
+    }
+
+    public void applyUniqueTrinketAttribute(Player player, ItemStack item, UniqueTrinketType type) {
+        if (item == null || !item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) return;
+
+        String displayName = ChatColor.stripColor(item.getItemMeta().getDisplayName()).toLowerCase();
+        
+        // Remove existing modifiers for this unique trinket type
+        removeUniqueTrinketAttributes(player, type);
+        
+        // Apply specific effects based on the trinket
+        if (type == UniqueTrinketType.BOSS_HEART) {
+            if (displayName.contains("heart of zeus")) {
+                // +10% Health (multiplicative, applied after all other modifiers)
+                AttributeInstance healthAttr = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+                if (healthAttr != null) {
+                    AttributeModifier modifier = new AttributeModifier(
+                        UUID.randomUUID(), 
+                        "unique_trinket.boss_heart.health_boost", 
+                        0.10, // 10% as decimal
+                        AttributeModifier.Operation.ADD_SCALAR
+                    );
+                    healthAttr.addModifier(modifier);
+                }
+            } else if (displayName.contains("heart of hades")) {
+                // +30 Armor
+                AttributeInstance armorAttr = player.getAttribute(Attribute.GENERIC_ARMOR);
+                if (armorAttr != null) {
+                    AttributeModifier modifier = new AttributeModifier(
+                        UUID.randomUUID(), 
+                        "unique_trinket.boss_heart.armor", 
+                        30.0, 
+                        AttributeModifier.Operation.ADD_NUMBER
+                    );
+                    armorAttr.addModifier(modifier);
+                }
+            } else if (displayName.contains("heart of poseidon")) {
+                // +10 Luck (flat) + 10% Luck (multiplicative)
+                AttributeInstance luckAttr = player.getAttribute(Attribute.GENERIC_LUCK);
+                if (luckAttr != null) {
+                    // First add flat +10 luck
+                    AttributeModifier flatModifier = new AttributeModifier(
+                        UUID.randomUUID(), 
+                        "unique_trinket.boss_heart.luck_flat", 
+                        10.0, 
+                        AttributeModifier.Operation.ADD_NUMBER
+                    );
+                    luckAttr.addModifier(flatModifier);
+                    
+                    // Then add 10% luck multiplicatively
+                    AttributeModifier percentModifier = new AttributeModifier(
+                        UUID.randomUUID(), 
+                        "unique_trinket.boss_heart.luck_percent", 
+                        0.10, // 10% as decimal
+                        AttributeModifier.Operation.ADD_SCALAR
+                    );
+                    luckAttr.addModifier(percentModifier);
+                }
+            }
+        }
+    }
+
+    public void removeUniqueTrinketAttributes(Player player, UniqueTrinketType type) {
+        for (Attribute attribute : Attribute.values()) {
+            AttributeInstance attributeInstance = player.getAttribute(attribute);
+            if (attributeInstance != null) {
+                for (AttributeModifier modifier : new ArrayList<>(attributeInstance.getModifiers())) {
+                    if (modifier.getName().startsWith("unique_trinket." + type.name().toLowerCase() + ".")) {
+                        attributeInstance.removeModifier(modifier);
+                    }
+                }
+            }
+        }
+    }
+
+    public void removeAllUniqueTrinketAttributes(Player player) {
+        for (Attribute attribute : Attribute.values()) {
+            AttributeInstance attributeInstance = player.getAttribute(attribute);
+            if (attributeInstance != null) {
+                for (AttributeModifier modifier : new ArrayList<>(attributeInstance.getModifiers())) {
+                    if (modifier.getName().startsWith("unique_trinket.")) {
+                        attributeInstance.removeModifier(modifier);
+                    }
+                }
+            }
         }
     }
 
@@ -196,16 +311,27 @@ public class PlayerData {
         appliedModifiers.remove(type);
     }
 
-    public void applyAllAttributes(Player player) {
-        // Remove all existing attributes added by the plugin
-        removeAllAttributes(player);
+// Dodaj tę metodę do klasy PlayerData.java
 
-        // Apply attributes from currently equipped accessories
-        for (Map.Entry<AccessoryType, ItemStack> entry : accessories.entrySet()) {
-            AccessoryType type = entry.getKey();
-            ItemStack item = entry.getValue();
-            applyAttributes(player, item, type);
+// Dodaj tę metodę do klasy PlayerData.java
+
+    public void applyAllAttributes(Player player) {
+        // Apply accessory attributes
+        for (AccessoryType type : AccessoryType.values()) {
+            ItemStack accessory = accessories.get(type);
+            if (accessory != null) {
+                applyAttributes(player, accessory, type);
+            }
         }
+
+        // Apply jewel attributes
+        TrinketsPlugin.getInstance().getJewelManager().applyJewelAttributes(player, this);
+
+        // Apply unique trinket attributes - POPRAWIONE
+        applyUniqueTrinketAttributes(player);
+
+        // Apply set bonuses - NOWA LINIA
+        TrinketsPlugin.getInstance().getSetBonusManager().updatePlayerSetBonuses(player, this);
     }
 
     public void removeAllAttributes(Player player) {
@@ -213,7 +339,7 @@ public class PlayerData {
             AttributeInstance attributeInstance = player.getAttribute(attribute);
             if (attributeInstance != null) {
                 for (AttributeModifier modifier : new ArrayList<>(attributeInstance.getModifiers())) {
-                    if (modifier.getName().startsWith("trinket.")) {
+                    if (modifier.getName().startsWith("trinket.") || modifier.getName().startsWith("set_bonus.")) {
                         attributeInstance.removeModifier(modifier);
                     }
                 }
@@ -256,6 +382,18 @@ public class PlayerData {
             try {
                 String itemData = ItemSerializationUtils.itemStackToBase64(rune);
                 sb.append("RUNE_").append(i).append(":").append(itemData).append(";");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Serialize unique trinkets
+        for (Map.Entry<UniqueTrinketType, ItemStack> entry : uniqueTrinkets.entrySet()) {
+            UniqueTrinketType type = entry.getKey();
+            ItemStack item = entry.getValue();
+            try {
+                String itemData = ItemSerializationUtils.itemStackToBase64(item);
+                sb.append("UNIQUE_").append(type.name()).append(":").append(itemData).append(";");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -314,6 +452,23 @@ public class PlayerData {
                 try {
                     ItemStack item = ItemSerializationUtils.itemStackFromBase64(parts[1]);
                     runes.add(item);
+                } catch (IllegalArgumentException | IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (entry.startsWith("UNIQUE_")) {
+                // Deserialize unique trinkets
+                String[] parts = entry.split(":", 2);
+                if (parts.length < 2) continue;
+
+                String trinketTypeName = parts[0].substring("UNIQUE_".length());
+                try {
+                    UniqueTrinketType trinketType = UniqueTrinketType.valueOf(trinketTypeName);
+                    ItemStack item = ItemSerializationUtils.itemStackFromBase64(parts[1]);
+                    uniqueTrinkets.put(trinketType, item);
+
+                    if (debuggingFlag == 1) {
+                        System.out.println("[PlayerData] Deserialized unique trinket: " + trinketType);
+                    }
                 } catch (IllegalArgumentException | IOException e) {
                     e.printStackTrace();
                 }

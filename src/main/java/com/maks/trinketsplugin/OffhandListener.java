@@ -31,10 +31,8 @@ public class OffhandListener implements Listener {
 
     @EventHandler
     public void onSwap(PlayerSwapHandItemsEvent event) {
-        Bukkit.getScheduler().runTask(plugin, () -> {
-            updateOffhand(event.getPlayer());
-            updateMainHand(event.getPlayer());
-        });
+        event.setCancelled(true);
+        returnOffhandToInventory(event.getPlayer());
     }
 
     @EventHandler
@@ -45,7 +43,9 @@ public class OffhandListener implements Listener {
         if (event.getSlotType() != InventoryType.SlotType.QUICKBAR) return;
 
         if (event.getSlot() == 40) {
-            Bukkit.getScheduler().runTask(plugin, () -> updateOffhand(player));
+            event.setCancelled(true);
+            returnOffhandToInventory(player);
+            return;
         } else if (event.getSlot() == player.getInventory().getHeldItemSlot()) {
             Bukkit.getScheduler().runTask(plugin, () -> updateMainHand(player));
         }
@@ -54,7 +54,7 @@ public class OffhandListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Bukkit.getScheduler().runTask(plugin, () -> {
-            updateOffhand(event.getPlayer());
+            returnOffhandToInventory(event.getPlayer());
             updateMainHand(event.getPlayer());
         });
     }
@@ -130,6 +130,19 @@ public class OffhandListener implements Listener {
                 if (modifier.getName().startsWith(prefix)) {
                     instance.removeModifier(modifier);
                 }
+            }
+        }
+    }
+
+    private void returnOffhandToInventory(Player player) {
+        ItemStack offhandItem = player.getInventory().getItemInOffHand();
+        if (offhandItem != null && offhandItem.getType() != Material.AIR) {
+            player.getInventory().setItemInOffHand(new ItemStack(Material.AIR));
+
+            if (player.getInventory().firstEmpty() != -1) {
+                player.getInventory().addItem(offhandItem);
+            } else {
+                player.getWorld().dropItemNaturally(player.getLocation(), offhandItem);
             }
         }
     }

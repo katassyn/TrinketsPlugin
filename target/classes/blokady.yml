@@ -1,66 +1,170 @@
 message: "You must be at least level %level% to use this item!"
 items:
-  fyrgons_ring_of_fire:
-    id: TNT_MINECART
-    display_name: '&6[ III ] &l&cFYRGON`S RING OF FIRE'
-    lv: 100
-  grimmags_flaming_wrath_bloodshed:
-    id: furnace_minecart
-    display_name: "&6[ III ] &eGrimmag`s Flaming Wrath"
-    lv: 50
-  grimmags_flaming_wrath_bloodshed+1:
-    id: furnace_minecart
-    display_name: "&6[ III ] &eGrimmag`s Flaming Wrath"
-    lv: 50
-  grimmags_flaming_wrath_bloodshed+2:
-    id: furnace_minecart
-    display_name: "&6[ III ] &eGrimmag`s Flaming Wrath"
-    lv: 50
-  grimmags_flaming_wrath_bloodshed+3:
-    id: furnace_minecart
-    display_name: "&6[ III ] &eGrimmag`s Flaming Wrath"
-    lv: 50
-  grimmags_flaming_wrath_bloodshed+4:
-    id: furnace_minecart
-    display_name: "&6[ III ] &eGrimmag`s Flaming Wrath"
-    lv: 50
+  # Dusze (Souls) - lv: 75
   q1_soul:
     id: DRAGON_BREATH
-    display_name: '&c☀ Grimmag’s Burning Soul'
+    display_name: '&c☀ Grimmor’s Burning Soul'
     lv: 75
   q2_soul:
     id: DRAGON_BREATH
-    display_name: '&2☠ Arachna’s Venomous Soul'
+    display_name: '&2☠ Araksha’s Venomous Soul'
     lv: 75
   q3_soul:
     id: DRAGON_BREATH
-    display_name: '&b❄ King Heredur’s Frostbound Soul'
+    display_name: '&b❄ King Heredorn’s Frostbound Soul'
     lv: 75
   q4_soul:
     id: DRAGON_BREATH
-    display_name: '&a🌿 Bearach’s Wildheart Soul'
+    display_name: '&a🌿 Bearok’s Wildheart Soul'
     lv: 75
   q5_soul:
     id: DRAGON_BREATH
-    display_name: '&5⚙ Khalys’s Shadowbound Soul'
+    display_name: '&5⚙ Kalith’s Shadowbound Soul'
     lv: 75
   q6_soul:
     id: DRAGON_BREATH
-    display_name: '&8⚔ Mortis’s Unchained Soul'
+    display_name: '&8⚔ Mortrix’s Unchained Soul'
     lv: 75
   q7_soul:
     id: DRAGON_BREATH
-    display_name: '&6🔥 Herald’s Molten Soul'
+    display_name: '&6🔥 Harbinger’s Molten Soul'
     lv: 75
   q8_soul:
     id: DRAGON_BREATH
-    display_name: '&b🌨 Sigrismar’s Blizzard Soul'
+    display_name: '&b🌨 Sigrosmar’s Blizzard Soul'
     lv: 75
   q9_soul:
     id: DRAGON_BREATH
-    display_name: '&2🪨 Medusa’s Petrifying Soul'
+    display_name: '&2🪨 M`Edara’s Petrifying Soul'
     lv: 75
   q10_soul:
     id: DRAGON_BREATH
-    display_name: '&3🐍 Gorga’s Abyssal Soul'
+    display_name: '&3🐍 Gorgra’s Abyssal Soul'
     lv: 75
+
+  # Przedmioty Unique - lv: 50
+  grimmags_flaming_wrath: # q1-hell_items.yml
+    id: furnace_minecart
+    display_name: '&5[ II ] &eGrimmor`s Flaming Wrath'
+    lv: 50
+  grimmags_flaming_wrath_bloodshed: # q1_blood_items.yml
+    id: furnace_minecart
+    display_name: '&6[ III ] &eGrimmor`s Flaming Wrath'
+    lv: 50
+  artayas_wild_care_hell: # q4_items.yml
+    id: iron_door
+    display_name: '&5[ II ] &eHeartwood Wildguard'
+    lv: 50
+  artayas_wild_care_blood: # q4_items.yml
+    id: iron_door
+    display_name: '&6[ III ] &eHeartwood Wildguard'
+    lv: 50
+  khalys_dark_scheme_hell: # q5_items.yml
+    id: chest_minecart
+    display_name: '&5[ II ] &eKalith` Dark Scheme'
+    lv: 50
+  khalys_dark_scheme_blood: # q5_items.yml
+    id: chest_minecart
+    display_name: '&6[ III ] &eKalith` Dark Scheme'
+    lv: 50
+  seal_of_death_hell: # q6_items.yml
+    id: chest_minecart
+    display_name: '&5[ II ] &eSeal of Death'
+    lv: 50
+  seal_of_death_blood: # q6_items.yml
+    id: chest_minecart
+    display_name: '&6[ III ] &eSeal of Death'
+    lv: 50
+  # the_heralds_burning_thunder_hell z q7_items.yml to broń (diamond_sword) - pomijam
+  # the_heralds_burning_thunder_blood z q7_items.yml to broń (diamond_sword) - pomijam
+  amulet_of_the_kraken_hell: # q9_items.yml
+    id: chest_minecart
+    display_name: '&5[ II ] &eAmulet of the Kraken'
+    lv: 50
+  amulet_of_the_kraken_blood: # q9_items.yml
+    id: chest_minecart
+    display_name: '&6[ III ] &eAmulet of the Kraken'
+    lv: 50
+  abyssal_treasure_shield_hell: # q10_items.yml
+    id: iron_door
+    display_name: '&5[ II ] &eAbyssal Treasure Shield'
+    lv: 50
+  abyssal_treasure_shield_blood: # q10_items.yml
+    id: iron_door
+    display_name: '&6[ III ] &eAbyssal Treasure Shield'
+    lv: 50
+  # Akcesoria z 81-90_items.yml (jeżeli są Unique)
+  ring_of_mortal_decay: # 81-90_items.yml
+    id: tnt_minecart
+    display_name: '&e❇ &eRing of Mortal Decay'
+    lv: 50
+  band_of_shadow_knights: # 81-90_items.yml
+    id: hopper_minecart
+    display_name: '&e❇ &eBand of Shadow Knights'
+    lv: 50
+  mortis_embrace: # 81-90_items.yml
+    id: chest_minecart
+    display_name: '&e❇ &eMortis Embrace'
+    lv: 50
+  bone_lord_sigil: # 81-90_items.yml
+    id: furnace_minecart
+    display_name: '&e❇ &eBone Lord Sigil'
+    lv: 50
+  shroud_of_the_fallen: # 81-90_items.yml
+    id: white_banner
+    display_name: '&e❇ &eShroud of the Fallen'
+    lv: 50
+  aegis_of_dark_souls: # 81-90_items.yml
+    id: iron_door
+    display_name: '&e❇ &eAegis of Dark Souls'
+    lv: 50
+  belt_of_the_death_knight: # 81-90_items.yml
+    id: minecart
+    display_name: '&e❇ &eBelt of the Death Knight'
+    lv: 50
+  gauntlets_of_shadow_grasp: # 81-90_items.yml
+    id: leather_horse_armor
+    display_name: '&e❇ &eGauntlets of Shadow Grasp'
+    lv: 50
+  # Akcesoria z 71-80_items.yml (jeżeli są Unique)
+  # aspis_splitter to broń - pomijam
+
+  # Przedmioty Mythic - lv: 65
+  fyrgons_ring_of_fire: # q1_blood_items.yml
+    id: TNT_MINECART # Poprawione na wielkie litery, jak w pliku blokady
+    display_name: '&6[ III ] &l&cGRIMMOR`S RING OF FIRE'
+    lv: 65
+  arachnas_vigor_of_the_spider: # q2_blood_items.yml
+    id: chest_minecart
+    display_name: '&6[ III ] &l&cARAKSHA`S VIGOR OF THE SPIDER'
+    lv: 65
+  heredurs_royal_shield_blood: # q3_items.yml
+    id: iron_door
+    display_name: '&6[ III ] &l&cHEREDORN`S ROYAL SHIELD'
+    lv: 65
+  bearachs_instinct_blood: # q4_items.yml
+    id: minecart
+    display_name: '&6[ III ] &l&cBEAROK`S INSTINCT'
+    lv: 65
+  # bearachs_tormentor_blood z q4_items.yml to broń (netherite_sword) - pomijam
+  balor_ring_of_chaos_blood: # q5_items.yml
+    id: hopper_minecart
+    display_name: '&6[ III ] &c&lBALOR RING OF CHAOS'
+    lv: 65
+  # armor_of_unchained_death_god_blood z q6_items.yml to zbroja - pomijam
+  # pants_of_unchained_death_god_blood z q6_items.yml to spodnie - pomijam
+  the_heralds_blazing_onslaught_blood: # q7_items.yml
+    id: leather_horse_armor
+    display_name: '&6[ III ] &c&lTHE HARBINGER`S BLAZING ONSLAUGHT'
+    lv: 65
+  unbreakable_magma_blood: # q7_items.yml
+    id: white_banner
+    display_name: '&6[ III ] &l&cUNBREAKABLE MAGMA'
+    lv: 65
+  sigrismarrs_eternal_grasp_blood: # q8_items.yml
+    id: furnace_minecart
+    display_name: '&6[ III ] &l&cSIGROSMAR`S ETERNAL GRASP'
+    lv: 65
+  # gorgonskin_leather_boots_blood z q9_items.yml to buty - pomijam
+  # abyssal_treasure_helmet_blood z q10_items.yml to hełm - pomijam
+

@@ -1,0 +1,386 @@
+# SET ITEMS CONFIGURATION
+# Configuration for set items and their bonuses
+
+# HERMES SET (T1) - "Hermes Divine Speed"
+hermes_boots_t1:
+  Id: golden_boots
+  Display: '&9[ T1 ] &l&bHermes Winged Sandals'
+  Group: mythological_t1
+  Enchantments:
+    - PROTECTION_ENVIRONMENTAL:50
+  Lore:
+    - ''
+    - '&7Protection: &950 🛡'
+    - '&7Set: &bHermes Divine Speed'
+    - '&8[2] &7+5% Movement Speed §b👟&7, +10 Health §c❤'
+    - '&lRarity:&r &l&bSet'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Hide:
+    - ATTRIBUTES
+  Skills:
+    - potion{t=SPEED;d=-1;level=2;p=false;hasIcon=false} @self ~onTimer:10
+    - potion{t=SPEED;d=1;level=0;p=false;force=true} @self ~onUnequip
+
+hermes_helmet_t1:
+  Id: golden_helmet
+  Display: '&9[ T1 ] &l&bHermes Divine Helm'
+  Group: mythological_t1
+  Enchantments:
+    - PROTECTION_ENVIRONMENTAL:50
+  Lore:
+    - ''
+    - '&7Protection: &950 🛡'
+    - '&7Set: &bHermes Divine Speed'
+    - '&8[2] &7+5% Movement Speed §b👟&7, +10 Health §c❤'
+    - '&lRarity:&r &l&bSet'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Hide:
+    - ATTRIBUTES
+  Skills:
+    - potion{t=INCREASE_DAMAGE;d=-1;level=2;p=false;hasIcon=false} @self ~onTimer:10
+    - potion{t=INCREASE_DAMAGE;d=1;level=0;p=false;force=true} @self ~onUnequip
+
+# OLYMPIAN SET (T2) - "Olympian Trinity"
+olympian_ring_of_power_t2:
+  Id: tnt_minecart
+  Display: '&a[ T2 ] &l&bOlympian Ring of Power'
+  Group: mythological_t2
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '&7Damage: &c+50 ⚔'
+    - '&7Set: &bOlympian Trinity'
+    - '&8[3] &7+50 Damage §c⚔&7, +50 Health §c❤&7, +5 Luck §a🍀'
+    - '&lRarity:&r &l&bSet'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Hide:
+    - ATTRIBUTES
+  Attributes:
+    All:
+      Damage: 50 ADD
+
+olympian_ring_of_vitality_t2:
+  Id: hopper_minecart
+  Display: '&a[ T2 ] &l&bOlympian Ring of Vitality'
+  Group: mythological_t2
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '&7Health: &c+50 ❤'
+    - '&7Set: &bOlympian Trinity'
+    - '&8[3] &7+50 Damage §c⚔&7, +50 Health §c❤&7, +5 Luck §a🍀'
+    - '&lRarity:&r &l&bSet'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Hide:
+    - ATTRIBUTES
+  Attributes:
+    All:
+      Health: 50 ADD
+
+olympian_belt_of_fortune_t2:
+  Id: minecart
+  Display: '&a[ T2 ] &l&bOlympian Belt of Fortune'
+  Group: mythological_t2
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '&7Luck: &a+5 🍀'
+    - '&7Set: &bOlympian Trinity'
+    - '&8[3] &7+50 Damage §c⚔&7, +50 Health §c❤&7, +5 Luck §a🍀'
+    - '&lRarity:&r &l&bSet'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Hide:
+    - ATTRIBUTES
+  Attributes:
+    All:
+      Luck: 5 ADD
+
+# DIVINE OLYMPUS SET (T3) - "Divine Olympus"
+divine_chestplate_of_olympus_t3:
+  Id: diamond_chestplate
+  Display: '&e[ T3 ] &l&bDivine Chestplate of Olympus'
+  Group: mythological_t3
+  Enchantments:
+    - PROTECTION_ENVIRONMENTAL:80
+  Lore:
+    - ''
+    - '&7Protection: &980 🛡'
+    - '&7Set: &bDivine Olympus'
+    - '&8[2] &7+3% Health §c❤'
+    - '&8[4] &7+100 Damage §c⚔&7, +1% Damage §c⚔'
+    - '&lRarity:&r &l&bSet'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Hide:
+    - ATTRIBUTES
+  Skills:
+    - potion{t=ABSORPTION;d=400;level=34;p=false;hasIcon=false;force=true} @self ~onTimer:200
+    - potion{t=ABSORPTION;d=1;level=0;p=false;force=true} @self ~onUnequip
+
+divine_gloves_of_olympus_t3:
+  Id: leather_horse_armor
+  Display: '&e[ T3 ] &l&bDivine Gloves of Olympus'
+  Group: mythological_t3
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '&7Attack Speed: &e+1 ⚡'
+    - '&7Armor: &e+5 🛡'
+    - '&7Set: &bDivine Olympus'
+    - '&8[2] &7+3% Health §c❤'
+    - '&8[4] &7+100 Damage §c⚔&7, +1% Damage §c⚔'
+    - '&lRarity:&r &l&bSet'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Hide:
+    - ATTRIBUTES
+  Attributes:
+    All:
+      AttackSpeed: 1 ADD
+      Armor: 5 ADD
+
+divine_leggings_of_olympus_t3:
+  Id: diamond_leggings
+  Display: '&e[ T3 ] &l&bDivine Leggings of Olympus'
+  Group: mythological_t3
+  Enchantments:
+    - PROTECTION_ENVIRONMENTAL:80
+  Lore:
+    - ''
+    - '&7Protection: &980 🛡'
+    - '&7Set: &bDivine Olympus'
+    - '&8[2] &7+3% Health §c❤'
+    - '&8[4] &7+100 Damage §c⚔&7, +1% Damage §c⚔'
+    - '&lRarity:&r &l&bSet'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Hide:
+    - ATTRIBUTES
+  Skills:
+    - potion{t=REGENERATION;d=-1;level=3;p=false;hasIcon=false} @self ~onTimer:10
+    - potion{t=REGENERATION;d=1;level=0;p=false;force=true} @self ~onUnequip
+
+divine_necklace_of_olympus_t3:
+  Id: chest_minecart
+  Display: '&e[ T3 ] &l&bDivine Necklace of Olympus'
+  Group: mythological_t3
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '&7Damage: &c+5% ⚔'
+    - '&7Set: &bDivine Olympus'
+    - '&8[2] &7+3% Health §c❤'
+    - '&8[4] &7+100 Damage §c⚔&7, +1% Damage §c⚔'
+    - '&lRarity:&r &l&bSet'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Hide:
+    - ATTRIBUTES
+  Attributes:
+    All:
+      Damage: 0.05 ADD_SCALAR
+
+# AEGIS PROTECTION SET (T4) - "Aegis Protection"
+transcendent_aegis_shield_of_zeus_t4:
+  Id: iron_door
+  Display: '&5[ T4 ] &l&bTranscendent Aegis Shield of Zeus'
+  Group: mythological_t4
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '&7Block Chance: &b35% 🎲'
+    - '&7Health: &c+88 ❤'
+    - '&7Set: &bAegis Protection'
+    - '&8[1] &7+10% Block Chance §b🎲&7, +50 Damage §c⚔'
+    - '&lRarity:&r &l&bSet'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Hide:
+    - ATTRIBUTES
+  Attributes:
+    All:
+      Health: 88 ADD
+
+# TITAN SET (T5) - "Titan Supremacy"
+titan_ring_of_destruction_t5:
+  Id: tnt_minecart
+  Display: '&c[ T5 ] &l&bTitan Ring of Destruction'
+  Group: mythological_t5
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '&7Damage: &c+400 ⚔'
+    - '&7Set: &bTitan Supremacy'
+    - '&8[2] &7+3% Health §c❤&7, +3% Damage §c⚔&7, +3% Luck §a🍀'
+    - '&8[4] &7+3% Health §c❤&7, +3% Damage §c⚔&7, +3% Luck §a🍀'
+    - '&8[6] &7+3% Health §c❤&7, +3% Damage §c⚔&7, +3% Luck §a🍀'
+    - '&lRarity:&r &l&bSet'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Hide:
+    - ATTRIBUTES
+  Attributes:
+    All:
+      Damage: 400 ADD
+
+titan_ring_of_vitality_t5:
+  Id: hopper_minecart
+  Display: '&c[ T5 ] &l&bTitan Ring of Vitality'
+  Group: mythological_t5
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '&7Health: &c+75 ❤'
+    - '&7Set: &bTitan Supremacy'
+    - '&8[2] &7+3% Health §c❤&7, +3% Damage §c⚔&7, +3% Luck §a🍀'
+    - '&8[4] &7+3% Health §c❤&7, +3% Damage §c⚔&7, +3% Luck §a🍀'
+    - '&8[6] &7+3% Health §c❤&7, +3% Damage §c⚔&7, +3% Luck §a🍀'
+    - '&lRarity:&r &l&bSet'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Hide:
+    - ATTRIBUTES
+  Attributes:
+    All:
+      Health: 75 ADD
+
+titan_necklace_of_supremacy_t5:
+  Id: chest_minecart
+  Display: '&c[ T5 ] &l&bTitan Necklace of Supremacy'
+  Group: mythological_t5
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '&7Damage: &c+200 ⚔'
+    - '&7Health: &c+50 ❤'
+    - '&7Set: &bTitan Supremacy'
+    - '&8[2] &7+3% Health §c❤&7, +3% Damage §c⚔&7, +3% Luck §a🍀'
+    - '&8[4] &7+3% Health §c❤&7, +3% Damage §c⚔&7, +3% Luck §a🍀'
+    - '&8[6] &7+3% Health §c❤&7, +3% Damage §c⚔&7, +3% Luck §a🍀'
+    - '&lRarity:&r &l&bSet'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Hide:
+    - ATTRIBUTES
+  Attributes:
+    All:
+      Damage: 200 ADD
+      Health: 50 ADD
+
+titan_belt_of_might_t5:
+  Id: minecart
+  Display: '&c[ T5 ] &l&bTitan Belt of Might'
+  Group: mythological_t5
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '&7Armor Toughness: &e+2 🛡'
+    - '&7Health: &c+33 ❤'
+    - '&7Damage: &c+33 ⚔'
+    - '&7Set: &bTitan Supremacy'
+    - '&8[2] &7+3% Health §c❤&7, +3% Damage §c⚔&7, +3% Luck §a🍀'
+    - '&8[4] &7+3% Health §c❤&7, +3% Damage §c⚔&7, +3% Luck §a🍀'
+    - '&8[6] &7+3% Health §c❤&7, +3% Damage §c⚔&7, +3% Luck §a🍀'
+    - '&lRarity:&r &l&bSet'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Hide:
+    - ATTRIBUTES
+  Attributes:
+    All:
+      ArmorToughness: 2 ADD
+      Health: 33 ADD
+      Damage: 33 ADD
+
+titan_gloves_of_fortress_t5:
+  Id: leather_horse_armor
+  Display: '&c[ T5 ] &l&bTitan Gloves of Fortress'
+  Group: mythological_t5
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '&7Armor: &e+8 🛡'
+    - '&7Health: &c+70 ❤'
+    - '&7Set: &bTitan Supremacy'
+    - '&8[2] &7+3% Health §c❤&7, +3% Damage §c⚔&7, +3% Luck §a🍀'
+    - '&8[4] &7+3% Health §c❤&7, +3% Damage §c⚔&7, +3% Luck §a🍀'
+    - '&8[6] &7+3% Health §c❤&7, +3% Damage §c⚔&7, +3% Luck §a🍀'
+    - '&lRarity:&r &l&bSet'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Hide:
+    - ATTRIBUTES
+  Attributes:
+    All:
+      Armor: 8 ADD
+      Health: 70 ADD
+
+titan_weapon_adornment_t5:
+  Id: furnace_minecart
+  Display: '&c[ T5 ] &l&bTitan Weapon Adornment'
+  Group: mythological_t5
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '&7Damage: &c+300 ⚔'
+    - '&7Set: &bTitan Supremacy'
+    - '&8[2] &7+3% Health §c❤&7, +3% Damage §c⚔&7, +3% Luck §a🍀'
+    - '&8[4] &7+3% Health §c❤&7, +3% Damage §c⚔&7, +3% Luck §a🍀'
+    - '&8[6] &7+3% Health §c❤&7, +3% Damage §c⚔&7, +3% Luck §a🍀'
+    - '&lRarity:&r &l&bSet'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Hide:
+    - ATTRIBUTES
+  Attributes:
+    All:
+      Damage: 300 ADD

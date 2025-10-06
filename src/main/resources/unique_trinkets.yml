@@ -1,0 +1,178 @@
+# Team Relics
+team_relic_of_hermes_t4:
+  Id: raw_iron
+  Display: '&5[ T4 ] &eTeam Relic of Hermes'
+  Group: mythological_t4
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '&7Team Buff: &rDivine Shield (immune to 1st damage) every 60s §6🛡'
+    - '&7Range: &r15 &7blocks'
+    - '&lRarity:&r &e&lUnique'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Hide:
+    - ATTRIBUTES
+
+team_relic_of_apollo_t3:
+  Id: raw_iron
+  Display: '&e[ T3 ] &eTeam Relic of Apollo'
+  Group: mythological_t3
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '&7Team Buff: &rHP Regen 100HP/s §c❤'
+    - '&7Range: &r10 &7blocks'
+    - '&lRarity:&r &e&lUnique'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Hide:
+    - ATTRIBUTES
+
+team_relic_of_athena_t2:
+  Id: raw_iron
+  Display: '&a[ T2 ] &eTeam Relic of Athena'
+  Group: mythological_t2
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '&7Team Buff: &r+5% Damage §c⚔'
+    - '&7Range: &r15 &7blocks'
+    - '&lRarity:&r &e&lUnique'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Hide:
+    - ATTRIBUTES
+
+team_relic_of_ares_t1:
+  Id: raw_iron
+  Display: '&9[ T1 ] &eTeam Relic of Ares'
+  Group: mythological_t1
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '&7Team Buff: &r+3% Movement Speed §b👟'
+    - '&7Range: &r20 &7blocks'
+    - '&lRarity:&r &e&lUnique'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Hide:
+    - ATTRIBUTES
+
+team_relic_of_zeus_t5:
+  Id: raw_iron
+  Display: '&c[ T5 ] &eTeam Relic of Zeus'
+  Group: mythological_t5
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '&7Team Buff: &r+20 Luck §a🍀'
+    - '&7Range: &r20 &7blocks'
+    - '&lRarity:&r &e&lUnique'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Hide:
+    - ATTRIBUTES
+
+# Boss Hearts
+heart_of_olympus_t5:
+  Id: raw_copper
+  Display: '&c[ T5 ] &l&cHeart of Olympus'
+  Group: mythological_t5
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '&7Deflect: &630% damage 🛡'
+    - '&lRarity:&r &c&lMythic'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Hide:
+    - ATTRIBUTES
+
+heart_of_kronos_t4:
+  Id: raw_copper
+  Display: '&5[ T4 ] &l&cHeart of Kronos'
+  Group: mythological_t4
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '&7Damage: &cMovement Speed x100 ⚔'
+    - '&lRarity:&r &c&lMythic'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Hide:
+    - ATTRIBUTES
+
+heart_of_hades_t3:
+  Id: raw_copper
+  Display: '&e[ T3 ] &l&cHeart of Hades'
+  Group: mythological_t3
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '&7Armor: &e+30 🛡'
+    - '&7Absorption: &6+200 every 10s 🛡'
+    - '&lRarity:&r &c&lMythic'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Hide:
+    - ATTRIBUTES
+
+heart_of_poseidon_t2:
+  Id: raw_copper
+  Display: '&a[ T2 ] &l&cHeart of Poseidon'
+  Group: mythological_t2
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '&7Luck: &a+10 🍀'
+    - '&7Luck: &a+10% 🍀'
+    - '&lRarity:&r &c&lMythic'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Hide:
+    - ATTRIBUTES
+
+boss_heart_of_zeus_t1:
+  Id: raw_copper
+  Display: '&9[ T1 ] &l&cHeart of Zeus'
+  Group: mythological_t1
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '&7Health: &c+10% ❤'
+    - '&lRarity:&r &c&lMythic'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Hide:
+    - ATTRIBUTES

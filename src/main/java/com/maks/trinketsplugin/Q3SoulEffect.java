@@ -13,6 +13,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Locale;
 import java.util.*;
 
 public class Q3SoulEffect implements Listener {
@@ -35,8 +36,8 @@ public class Q3SoulEffect implements Listener {
         if (soul == null || !soul.hasItemMeta() || soul.getItemMeta().getDisplayName() == null) {
             return false;
         }
-        String name = ChatColor.stripColor(soul.getItemMeta().getDisplayName());
-        return name.contains("King Heredur’s Frostbound Soul");
+        String name = ChatColor.stripColor(soul.getItemMeta().getDisplayName()).toLowerCase(Locale.ROOT);
+        return name.contains("heredorn") && name.contains("frostbound soul");
     }
 
     @EventHandler

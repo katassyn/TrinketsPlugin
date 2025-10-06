@@ -24,6 +24,9 @@ public class TrinketsCommand implements CommandExecutor {
                     case "jewels":
                         JewelsGUI.openJewelsMenu(player);
                         break;
+                    case "unique":
+                        UniqueTrinketsGUI.openUniqueTrinketsMenu(player);
+                        break;
                     default:
                         TrinketsGUI.openMainMenu(player);
                         break;

@@ -21,7 +21,7 @@ public class JewelsGUI {
             Bukkit.getLogger().info("[JewelsGUI] Opening jewels menu for " + player.getName());
         }
 
-        Inventory gui = Bukkit.createInventory(null, 27, "Jewels Menu");
+        Inventory gui = Bukkit.createInventory(null, 36, "Jewels Menu");
 
         // Get player data
         TrinketsPlugin.getInstance().getDatabaseManager().loadPlayerData(player.getUniqueId(), data -> {
@@ -46,16 +46,16 @@ public class JewelsGUI {
                 }
 
                 slot++;
-                if (slot >= 27) break; // Safety check to prevent exceeding inventory size
+                if (slot >= 34) break; // Safety check to prevent exceeding inventory size (leave space for buttons)
             }
 
             // Add Focus Jewels button
-            gui.setItem(15, createMenuItem(Material.BLUE_DYE, ChatColor.BLUE + "Focus Jewels", 
-                    ChatColor.GRAY + "Manage your Focus Jewels", 
+            gui.setItem(34, createMenuItem(Material.BLUE_DYE, ChatColor.BLUE + "Focus Jewels",
+                    ChatColor.GRAY + "Manage your Focus Jewels",
                     ChatColor.GRAY + "You can equip up to 3 Focus Jewels"));
 
             // Add back button
-            gui.setItem(26, createMenuItem(Material.ARROW, ChatColor.YELLOW + "Back", 
+            gui.setItem(35, createMenuItem(Material.ARROW, ChatColor.YELLOW + "Back",
                     ChatColor.GRAY + "Return to the main menu"));
 
             // Open GUI for player

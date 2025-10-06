@@ -17,6 +17,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Locale;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -45,8 +46,8 @@ public class Q9SoulEffect implements Listener {
         if (soul == null || !soul.hasItemMeta() || soul.getItemMeta().getDisplayName() == null) {
             return false;
         }
-        String name = ChatColor.stripColor(soul.getItemMeta().getDisplayName());
-        return name.contains("Medusa’s Petrifying Soul");
+        String name = ChatColor.stripColor(soul.getItemMeta().getDisplayName()).toLowerCase(Locale.ROOT);
+        return name.contains("medara") && name.contains("petrifying soul");
     }
 
     @EventHandler

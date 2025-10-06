@@ -1,5 +1,6 @@
 package com.maks.trinketsplugin;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,8 +32,8 @@ public class InventoryClickListener implements Listener {
                 TrinketsGUI.openAccessoriesMenu(player);
             } else if (itemName.equals("Runes")) {
                 RunesGUI.openRunesMenu(player);
-            } else if (itemName.equals("Gems")) {
-                // Future implementation
+            } else if (itemName.equals("Unique Trinkets")) {
+                UniqueTrinketsGUI.openUniqueTrinketsMenu(player);
             } else if (itemName.equals("Jewels")) {
                 JewelsGUI.openJewelsMenu(player);
             }
@@ -127,6 +128,12 @@ public class InventoryClickListener implements Listener {
             ItemStack clickedItem = event.getCurrentItem();
             if (clickedItem == null || clickedItem.getType() == Material.AIR) return;
 
+            // Handle back button
+            if (clickedItem.getType() == Material.ARROW && event.getSlot() == 17) {
+                TrinketsGUI.openMainMenu(player);
+                return;
+            }
+
             // If it's a locked or empty slot, do nothing
             if (clickedItem.getType().toString().contains("GLASS_PANE") ||
                 clickedItem.getType() == Material.BARRIER) return;
@@ -135,15 +142,104 @@ public class InventoryClickListener implements Listener {
             PlayerData data = TrinketsPlugin.getInstance().getDatabaseManager().getPlayerData(player.getUniqueId());
             List<ItemStack> runes = new java.util.ArrayList<>(data.getRunes());
 
-                if (slot < runes.size()) {
-                    ItemStack rune = runes.remove(slot);
-                    player.getInventory().addItem(rune);
-                    data.removeRune(slot);
-                    TrinketsPlugin.getInstance().getDatabaseManager().savePlayerData(player.getUniqueId(), data);
-                    TrinketsPlugin.getInstance().getRuneEffectsListener().updateLuck(player);
-                    RunesGUI.openRunesMenu(player);
-                }
+            if (slot < runes.size()) {
+                ItemStack rune = runes.remove(slot);
+                player.getInventory().addItem(rune);
+                data.removeRune(slot);
+                TrinketsPlugin.getInstance().getDatabaseManager().savePlayerData(player.getUniqueId(), data);
+                TrinketsPlugin.getInstance().getRuneEffectsListener().updateLuck(player);
+                RunesGUI.openRunesMenu(player);
+            }
+        } else if (title.equals("Unique Trinkets")) {
+            // Allow players to interact with their own inventory for equipping items
+            if (event.getClickedInventory() != null && event.getClickedInventory().equals(player.getInventory())) {
+                return;
+            }
 
+            event.setCancelled(true);
+
+            ItemStack clickedItem = event.getCurrentItem();
+            int slot = event.getSlot();
+            
+            // Handle back button
+            if (slot == 8 && clickedItem != null && clickedItem.getType() == Material.ARROW) {
+                TrinketsGUI.openMainMenu(player);
+                return;
+            }
+            
+            // Handle unique trinket slots (slots 0 and 1)
+            UniqueTrinketType slotType = getSlotTypeFromSlot(slot);
+            if (slotType == null) return;
+            
+            ItemStack cursorItem = event.getCursor();
+            
+            if (clickedItem != null && !clickedItem.getType().toString().contains("GLASS_PANE")) {
+                // Player is trying to unequip an item
+                unequipUniqueTrinketItem(player, slotType);
+                UniqueTrinketsGUI.openUniqueTrinketsMenu(player);
+            }
+        } else if (org.bukkit.ChatColor.stripColor(title).equals("Your Stats")) {
+            // Prevent taking items from the stats GUI; allow arrow to close
+            event.setCancelled(true);
+            org.bukkit.inventory.ItemStack clicked = event.getCurrentItem();
+            if (clicked != null && clicked.getType() == org.bukkit.Material.ARROW) {
+                player.closeInventory();
             }
         }
     }
+
+    private UniqueTrinketType getSlotTypeFromSlot(int slot) {
+        for (UniqueTrinketType type : UniqueTrinketType.values()) {
+            if (type.getSlot() == slot) {
+                return type;
+            }
+        }
+        return null;
+    }
+
+
+    private void equipUniqueTrinketItem(Player player, UniqueTrinketType type, ItemStack item) {
+        PlayerData data = TrinketsPlugin.getInstance().getDatabaseManager().getPlayerData(player.getUniqueId());
+        
+        // Check for existing trinket and return it to player
+        ItemStack existing = data.getUniqueTrinket(type);
+        if (existing != null) {
+            player.getInventory().addItem(existing);
+        }
+        
+        // Equip new trinket
+        data.setUniqueTrinket(type, item.clone());
+        
+        // For team relics, check if player is in party and is leader
+        if (type == UniqueTrinketType.TEAM_RELIC) {
+            if (!PartyAPIIntegration.isPartyLeader(player)) {
+                player.sendMessage("§eTeam Relic equipped, but you must be a party leader for it to work!");
+            } else {
+                player.sendMessage("§aTeam Relic equipped and active!");
+            }
+        } else {
+            player.sendMessage("§aUnique trinket equipped!");
+        }
+        
+        // Save data
+        TrinketsPlugin.getInstance().getDatabaseManager().savePlayerData(player.getUniqueId(), data);
+    }
+
+    private void unequipUniqueTrinketItem(Player player, UniqueTrinketType type) {
+        PlayerData data = TrinketsPlugin.getInstance().getDatabaseManager().getPlayerData(player.getUniqueId());
+        ItemStack item = data.getUniqueTrinket(type);
+        
+        if (item != null) {
+            // Remove attributes first
+            data.removeUniqueTrinketAttributes(player, type);
+            
+            // Remove from data
+            data.removeUniqueTrinket(type);
+            player.getInventory().addItem(item);
+            player.sendMessage("§eUnique trinket unequipped!");
+            
+            // Save data
+            TrinketsPlugin.getInstance().getDatabaseManager().savePlayerData(player.getUniqueId(), data);
+        }
+    }
+}

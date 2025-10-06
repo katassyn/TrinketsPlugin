@@ -2,6 +2,7 @@ name: TrinketsPlugin
 version: '1.0-SNAPSHOT'
 main: com.maks.trinketsplugin.TrinketsPlugin
 api-version: '1.20'
+softdepend: [PetPlugin, MyExperiencePlugin, biologPlugin]
 commands:
   trinkets:
     description: Opens the Trinkets menu.
@@ -17,3 +18,24 @@ commands:
   jewels:
     description: "Show info about jewels"
     usage: /jewels
+  gem_actions:
+    description: Open gem actions GUI
+    usage: /gem_actions
+    permission: mycraftingplugin.use
+    permission-message: You do not have permission to use this command.
+  conjuration_menu:
+    description: Open conjuration menu
+    usage: /conjuration_menu
+    permission: mycraftingplugin.use
+    permission-message: You do not have permission to use this command.
+  augmenter:
+    description: Open quality augmenter GUI
+    usage: /augmenter
+    permission: mycraftingplugin.use
+    permission-message: You do not have permission to use this command.
+  setbonus:
+    description: Shows your current set bonuses
+    usage: /setbonus
+  player_attrib_stats:
+    description: Opens a GUI with your summed attributes
+    usage: /player_attrib_stats

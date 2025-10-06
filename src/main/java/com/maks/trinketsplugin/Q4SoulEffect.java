@@ -14,6 +14,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Locale;
 import java.util.*;
 
 public class Q4SoulEffect implements Listener {
@@ -40,8 +41,8 @@ public class Q4SoulEffect implements Listener {
         if (soul == null || !soul.hasItemMeta() || soul.getItemMeta().getDisplayName() == null) {
             return false;
         }
-        String name = ChatColor.stripColor(soul.getItemMeta().getDisplayName());
-        return name.contains("Bearach’s Wildheart Soul");
+        String name = ChatColor.stripColor(soul.getItemMeta().getDisplayName()).toLowerCase(Locale.ROOT);
+        return name.contains("bearok") && name.contains("wildheart soul");
     }
 
     @EventHandler

@@ -22,6 +22,16 @@ public class PlayerDamageListener implements Listener {
             int blockChance = data.getBlockChance();
             int blockStrength = data.getBlockStrength() + 35; // Base block strength is 35%
 
+            // Add set bonus block chance from Aegis Protection - ZAKTUALIZOWANA SEKCJA
+            SetBonusManager setBonusManager = TrinketsPlugin.getInstance().getSetBonusManager();
+            if (setBonusManager != null) {
+                // Użyj metody getBlockChanceBonus zamiast ręcznego sprawdzania
+                blockChance += setBonusManager.getBlockChanceBonus(player);
+            }
+
+            // Cap block chance at 100%
+            blockChance = Math.min(blockChance, 100);
+
             if (blockChance > 0) {
                 // Implement the chance logic
                 Random random = new Random();
@@ -33,7 +43,7 @@ public class PlayerDamageListener implements Listener {
                     event.setDamage(reducedDamage);
 
                     // Optionally, send a message or play a sound
-                  //  player.sendMessage("You blocked the attack, reducing damage by " + blockStrength + "%!");
+                    //  player.sendMessage("You blocked the attack, reducing damage by " + blockStrength + "%!");
                 }
             }
         }

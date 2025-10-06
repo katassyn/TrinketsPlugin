@@ -43,8 +43,8 @@ public class DatabaseManager {
                 config.setPassword(password);
 
                 // HikariCP settings
-                config.setMaximumPoolSize(10);
-                config.setMinimumIdle(5);
+                config.setMaximumPoolSize(25); // Increased for 30+ players - HIGH PRIORITY trinkets system
+                config.setMinimumIdle(12); // Trinkets need stable connections for equipment access
                 config.setIdleTimeout(300000); // 5 minutes
                 config.setConnectionTimeout(10000); // 10 seconds
                 config.setMaxLifetime(600000); // 10 minutes
@@ -177,6 +177,8 @@ public class DatabaseManager {
         }
     }
 
+// W DatabaseManager.java, zaktualizuj metodę equipAccessory:
+
     public void equipAccessory(Player player, ItemStack item) {
         UUID uuid = player.getUniqueId();
 
@@ -232,6 +234,10 @@ public class DatabaseManager {
 
             data.setAccessory(type, accessoryToEquip);
             data.applyAttributes(player, accessoryToEquip, type);
+
+            // Update set bonuses - NOWA LINIA
+            TrinketsPlugin.getInstance().getSetBonusManager().updatePlayerSetBonuses(player, data);
+
             savePlayerData(uuid, data);
 
             // Remove only one item from the player's inventory
@@ -250,6 +256,8 @@ public class DatabaseManager {
         });
     }
 
+// W metodzie unequipAccessory, również dodaj:
+
     public void unequipAccessory(Player player, ItemStack item) {
         UUID uuid = player.getUniqueId();
 
@@ -263,6 +271,10 @@ public class DatabaseManager {
 
             data.removeAccessory(type);
             data.removeAttributes(player, type);
+
+            // Update set bonuses - NOWA LINIA
+            TrinketsPlugin.getInstance().getSetBonusManager().updatePlayerSetBonuses(player, data);
+
             savePlayerData(uuid, data);
 
             // Ensure we only return one accessory, not the entire stack

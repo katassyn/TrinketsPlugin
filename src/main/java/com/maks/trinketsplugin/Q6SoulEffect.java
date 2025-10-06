@@ -16,6 +16,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Locale;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -45,8 +46,8 @@ public class Q6SoulEffect implements Listener {
         if (soul == null || !soul.hasItemMeta() || soul.getItemMeta().getDisplayName() == null) {
             return false;
         }
-        String name = ChatColor.stripColor(soul.getItemMeta().getDisplayName());
-        return name.contains("Mortis’s Unchained Soul");
+        String name = ChatColor.stripColor(soul.getItemMeta().getDisplayName()).toLowerCase(Locale.ROOT);
+        return name.contains("mortrix") && name.contains("unchained soul");
     }
 
     /**

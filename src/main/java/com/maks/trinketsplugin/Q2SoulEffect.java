@@ -13,6 +13,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Locale;
 import java.util.Random;
 
 public class Q2SoulEffect implements Listener {
@@ -31,8 +32,8 @@ public class Q2SoulEffect implements Listener {
         if (soul == null || !soul.hasItemMeta() || soul.getItemMeta().getDisplayName() == null) {
             return false;
         }
-        String name = ChatColor.stripColor(soul.getItemMeta().getDisplayName());
-        return name.contains("Arachna’s Venomous Soul");
+        String name = ChatColor.stripColor(soul.getItemMeta().getDisplayName()).toLowerCase(Locale.ROOT);
+        return name.contains("araksha") && name.contains("venomous soul");
     }
 
     @EventHandler

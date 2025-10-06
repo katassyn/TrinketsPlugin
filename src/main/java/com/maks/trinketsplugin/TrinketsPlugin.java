@@ -21,6 +21,8 @@ public class TrinketsPlugin extends JavaPlugin {
     private JewelManager jewelManager;
     private RuneManager runeManager;
     private RuneEffectsListener runeEffectsListener;
+    private UniqueTrinketEffectsListener uniqueTrinketEffectsListener;
+    private SetBonusManager setBonusManager;
 
     private OffhandListener offhandListener;
     private static final int debuggingFlag = 1;
@@ -51,6 +53,18 @@ public class TrinketsPlugin extends JavaPlugin {
             saveResource("runes.yml", false);
         }
 
+        // Create unique_trinkets.yml if it doesn't exist
+        File uniqueTrinketsFile = new File(getDataFolder(), "unique_trinkets.yml");
+        if (!uniqueTrinketsFile.exists()) {
+            saveResource("unique_trinkets.yml", false);
+        }
+
+        // Create set_items.yml if it doesn't exist
+        File setItemsFile = new File(getDataFolder(), "set_items.yml");
+        if (!setItemsFile.exists()) {
+            saveResource("set_items.yml", false);
+        }
+
         // Initialize DatabaseManager
         databaseManager = new DatabaseManager();
 
@@ -64,6 +78,8 @@ public class TrinketsPlugin extends JavaPlugin {
         jewelManager = new JewelManager(this);
         runeManager = new RuneManager(this);
         runeEffectsListener = new RuneEffectsListener(this);
+        uniqueTrinketEffectsListener = new UniqueTrinketEffectsListener(this);
+        setBonusManager = new SetBonusManager(this);
 
 
         // Initialize JewelAPI
@@ -116,6 +132,9 @@ public class TrinketsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ConjurationListener(), this);
         getServer().getPluginManager().registerEvents(new RunicWordEffectsListener(this), this);
         getServer().getPluginManager().registerEvents(new AugmenterListener(), this);
+        getServer().getPluginManager().registerEvents(uniqueTrinketEffectsListener, this);
+        getServer().getPluginManager().registerEvents(new ArmorChangeListener(this), this);
+
         // Load data for already logged-in players
         for (Player player : Bukkit.getOnlinePlayers()) {
             getDatabaseManager().loadPlayerData(player.getUniqueId(), data -> {
@@ -125,6 +144,9 @@ public class TrinketsPlugin extends JavaPlugin {
                 // Apply jewel attributes
                 jewelManager.applyJewelAttributes(player, data);
                 runeEffectsListener.updateLuck(player);
+
+                // Apply set bonuses - NOWA LINIA
+                setBonusManager.updatePlayerSetBonuses(player, data);
 
                 // Ensure accessories in hands don't grant attributes
                 offhandListener.updateOffhand(player);
@@ -142,6 +164,8 @@ public class TrinketsPlugin extends JavaPlugin {
         getCommand("gem_actions").setExecutor(new GemActionsCommand());
         getCommand("conjuration_menu").setExecutor(new ConjurationCommand());
         getCommand("augmenter").setExecutor(new AugmenterCommand());
+        getCommand("setbonus").setExecutor(new SetBonusCommand());
+        getCommand("player_attrib_stats").setExecutor(new PlayerAttribStatsCommand());
 
     }
 
@@ -180,6 +204,10 @@ public class TrinketsPlugin extends JavaPlugin {
 
     public OffhandListener getOffhandListener() {
         return offhandListener;
+    }
+
+    public SetBonusManager getSetBonusManager() {
+        return setBonusManager;
     }
     private boolean setupEconomy() {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {

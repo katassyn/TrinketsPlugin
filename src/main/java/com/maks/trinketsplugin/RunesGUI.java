@@ -14,7 +14,7 @@ import java.util.List;
 public class RunesGUI {
 
     public static void openRunesMenu(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 9, "Runes");
+        Inventory gui = Bukkit.createInventory(null, 18, "Runes");
 
         PlayerData data = TrinketsPlugin.getInstance().getDatabaseManager().getPlayerData(player.getUniqueId());
         List<ItemStack> runes = data.getRunes();
@@ -34,6 +34,9 @@ public class RunesGUI {
                 gui.setItem(i, createLockedSlot(reqLevel));
             }
         }
+
+        // Add back button
+        gui.setItem(17, createBackButton());
 
         player.openInventory(gui);
     }
@@ -60,6 +63,15 @@ public class RunesGUI {
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(ChatColor.RED + "Locked Slot");
         meta.setLore(Arrays.asList(ChatColor.GRAY + "Unlock at level " + level));
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    private static ItemStack createBackButton() {
+        ItemStack item = new ItemStack(Material.ARROW);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(ChatColor.YELLOW + "Back");
+        meta.setLore(Arrays.asList(ChatColor.GRAY + "Return to the main menu"));
         item.setItemMeta(meta);
         return item;
     }

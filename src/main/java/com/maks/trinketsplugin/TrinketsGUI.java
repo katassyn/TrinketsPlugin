@@ -16,13 +16,13 @@ public class TrinketsGUI {
         // Icons for submenus
         ItemStack accessoriesIcon = createMenuItem(Material.DIAMOND, "Accessories", "Manage your accessories.");
         ItemStack runesIcon = createMenuItem(Material.ENCHANTED_BOOK, "Runes", "Manage your runes.");
-        ItemStack gemsIcon = createMenuItem(Material.EMERALD, "Gems", "Manage your gems.");
+        ItemStack uniqueTrinketsIcon = createMenuItem(Material.EMERALD, "Unique Trinkets", "Manage your unique trinkets.");
         ItemStack jewelsIcon = createMenuItem(Material.FEATHER, "Jewels", "Manage your jewels.");
 
         // Place icons in the GUI
         gui.setItem(2, accessoriesIcon);
         gui.setItem(3, runesIcon);
-        gui.setItem(5, gemsIcon);
+        gui.setItem(5, uniqueTrinketsIcon);
         gui.setItem(6, jewelsIcon);
 
         player.openInventory(gui);
