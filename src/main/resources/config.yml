@@ -4,3 +4,10 @@ database:
   name: "minecraft_trinkets"
   user: "root"
   password: "password"
+
+protection-curve:
+  base-level: 16
+  base-reduction: 0.64
+  max-cap: 0.80
+  max-total-level: 800
+  k-factor: 0.102

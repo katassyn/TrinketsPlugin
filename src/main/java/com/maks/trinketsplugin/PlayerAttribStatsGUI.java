@@ -68,6 +68,18 @@ public class PlayerAttribStatsGUI {
         bsLore.add(bullet("Total: " + totalBlockStrength + "%"));
         gui.setItem(20, createItem(Material.IRON_BLOCK, ChatColor.GOLD + "Block Strength", bsLore));
 
+        ProtectionReductionCalculator.ProtectionStats protectionStats = ProtectionReductionCalculator.calculate(player);
+        List<String> protectionLore = new ArrayList<>();
+        protectionLore.add(bullet("Sum Levels: " + protectionStats.totalProtection()));
+        if (protectionStats.cappedTotalProtection() != protectionStats.totalProtection()) {
+            protectionLore.add(bullet("Capped Levels: " + protectionStats.cappedTotalProtection()));
+        }
+        protectionLore.add(bullet("Base Reduction: " + formatPercent(protectionStats.baseReductionApplied())));
+        protectionLore.add(bullet("Extra Reduction: " + formatPercent(protectionStats.extraReduction())));
+        protectionLore.add(bullet("Total Reduction: " + formatPercent(protectionStats.totalReduction())));
+        protectionLore.add(bullet("Damage Taken: " + formatPercent(protectionStats.finalDamageMultiplier())));
+        gui.setItem(21, createItem(Material.ENCHANTED_BOOK, ChatColor.BLUE + "Protection Reduction", protectionLore));
+
         // Section: Class & Skills
         gui.setItem(27, createHeader(Material.PURPLE_STAINED_GLASS_PANE, ChatColor.LIGHT_PURPLE + "Class & Skills"));
         addMyExperienceStats(gui, player, 28);
