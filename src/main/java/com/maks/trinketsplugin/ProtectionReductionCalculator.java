@@ -68,7 +68,8 @@ public final class ProtectionReductionCalculator {
         ProtectionStats stats = calculate(player);
         // The Bukkit damage event already contains the vanilla protection reduction, so we
         // compensate for it here and only apply the additional scaling from the custom curve.
-        double vanillaMultiplier = 1.0 - stats.baseReductionApplied();
+        double vanillaReduction = Math.min(0.80, Math.max(0, stats.totalProtection()) * 0.04);
+        double vanillaMultiplier = 1.0 - vanillaReduction;
         if (vanillaMultiplier <= 0.0) {
             return 0.0;
         }
