@@ -39,8 +39,22 @@ public class InventoryClickListener implements Listener {
             }
 
         } else if (title.equals("Accessories")) {
-            // Allow players to interact with their own inventory without triggering unequip logic
-            if (event.getClickedInventory() == null || event.getClickedInventory().equals(player.getInventory())) {
+            // Allow players to interact with their own inventory, but block transfers into the GUI
+            if (event.getClickedInventory() == null) {
+                return;
+            }
+            if (event.getClickedInventory().equals(player.getInventory())) {
+                // Cancel shift-click and other transfer actions that would move items into the GUI
+                org.bukkit.event.inventory.InventoryAction action = event.getAction();
+                org.bukkit.event.inventory.ClickType click = event.getClick();
+                if (event.isShiftClick()
+                        || action == org.bukkit.event.inventory.InventoryAction.MOVE_TO_OTHER_INVENTORY
+                        || action == org.bukkit.event.inventory.InventoryAction.COLLECT_TO_CURSOR
+                        || action == org.bukkit.event.inventory.InventoryAction.HOTBAR_SWAP
+                        || action == org.bukkit.event.inventory.InventoryAction.HOTBAR_MOVE_AND_READD
+                        || click == org.bukkit.event.inventory.ClickType.NUMBER_KEY) {
+                    event.setCancelled(true);
+                }
                 return;
             }
 
@@ -151,30 +165,28 @@ public class InventoryClickListener implements Listener {
                 RunesGUI.openRunesMenu(player);
             }
         } else if (title.equals("Unique Trinkets")) {
-            // Allow players to interact with their own inventory for equipping items
-            if (event.getClickedInventory() != null && event.getClickedInventory().equals(player.getInventory())) {
-                return;
-            }
-
+            // Block all item movement inside this GUI to prevent stacking/dupes
             event.setCancelled(true);
 
             ItemStack clickedItem = event.getCurrentItem();
             int slot = event.getSlot();
-            
-            // Handle back button
+
+            // If clicking in the player's own inventory while this GUI is open, do nothing
+            if (event.getClickedInventory() != null && event.getClickedInventory().equals(player.getInventory())) {
+                return;
+            }
+
+            // Back button
             if (slot == 8 && clickedItem != null && clickedItem.getType() == Material.ARROW) {
                 TrinketsGUI.openMainMenu(player);
                 return;
             }
-            
-            // Handle unique trinket slots (slots 0 and 1)
+
+            // Unequip from defined unique trinket slots
             UniqueTrinketType slotType = getSlotTypeFromSlot(slot);
             if (slotType == null) return;
-            
-            ItemStack cursorItem = event.getCursor();
-            
+
             if (clickedItem != null && !clickedItem.getType().toString().contains("GLASS_PANE")) {
-                // Player is trying to unequip an item
                 unequipUniqueTrinketItem(player, slotType);
                 UniqueTrinketsGUI.openUniqueTrinketsMenu(player);
             }
@@ -200,15 +212,29 @@ public class InventoryClickListener implements Listener {
 
     private void equipUniqueTrinketItem(Player player, UniqueTrinketType type, ItemStack item) {
         PlayerData data = TrinketsPlugin.getInstance().getDatabaseManager().getPlayerData(player.getUniqueId());
+        if (item == null) return;
+
+        // Enforce unstacked unique trinkets when equipping via GUI logic
+        if (item.getAmount() > 1) {
+            player.sendMessage("§cUnique trinkets must be unstacked (amount = 1) before equipping.");
+            return;
+        }
         
         // Check for existing trinket and return it to player
         ItemStack existing = data.getUniqueTrinket(type);
         if (existing != null) {
-            player.getInventory().addItem(existing);
+            data.removeUniqueTrinketAttributes(player, type);
+            java.util.Map<Integer, ItemStack> leftovers = player.getInventory().addItem(existing);
+            if (!leftovers.isEmpty()) {
+                leftovers.values().forEach(left -> player.getWorld().dropItemNaturally(player.getLocation(), left));
+            }
         }
         
         // Equip new trinket
         data.setUniqueTrinket(type, item.clone());
+
+        // Apply attributes for the new unique trinket
+        data.applyUniqueTrinketAttribute(player, item.clone(), type);
         
         // For team relics, check if player is in party and is leader
         if (type == UniqueTrinketType.TEAM_RELIC) {
@@ -240,6 +266,21 @@ public class InventoryClickListener implements Listener {
             
             // Save data
             TrinketsPlugin.getInstance().getDatabaseManager().savePlayerData(player.getUniqueId(), data);
+        }
+    }
+
+    @org.bukkit.event.EventHandler
+    public void onInventoryDrag(org.bukkit.event.inventory.InventoryDragEvent event) {
+        String title = event.getView().getTitle();
+        if (title.equals("Unique Trinkets")
+                || title.equals("Accessories")
+                || title.equals("Jewels Menu")
+                || title.equals("Focus Jewels")
+                || title.equals("Runes")
+                || title.equals("Trinkets Menu")
+                || org.bukkit.ChatColor.stripColor(title).equals("Your Stats")) {
+            // Prevent dragging items into/out of any of the plugin GUIs
+            event.setCancelled(true);
         }
     }
 }

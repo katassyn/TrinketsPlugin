@@ -1,6 +1,7 @@
 package com.maks.trinketsplugin;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -13,7 +14,7 @@ public class RuneManager {
     private final TrinketsPlugin plugin;
     private final List<String> runeNames = Arrays.asList(
             "Uruz", "Algiz", "Shield", "Thurisaz", "Wunjo",
-            "Laguz", "Gebo", "Ehwaz", "Berkano"
+            "Laguz", "Gebo", "Ehwaz", "Berkano", "Winter Unity"
     );
 
     public RuneManager(TrinketsPlugin plugin) {
@@ -25,7 +26,36 @@ public class RuneManager {
             return false;
         }
         String name = ChatColor.stripColor(item.getItemMeta().getDisplayName());
-        return runeNames.stream().anyMatch(name::contains);
+        for (String runeName : runeNames) {
+            if (!name.contains(runeName)) {
+                continue;
+            }
+            if ("Shield".equals(runeName) && item.getType() != Material.HEART_POTTERY_SHERD) {
+                continue; // Shield rune must be crafted from the pottery sherd material
+            }
+            if ("Winter Unity".equals(runeName) && item.getType() != Material.MINER_POTTERY_SHERD) {
+                continue; // Winter Unity rune must be MINER_POTTERY_SHERD
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Counts how many Winter Unity runes the player currently has equipped.
+     * @param data Player's rune data
+     * @return Count of Winter Unity runes (0-9)
+     */
+    private int countWinterUnityRunes(PlayerData data) {
+        int count = 0;
+        for (ItemStack rune : data.getRunes()) {
+            if (rune == null || !rune.hasItemMeta()) continue;
+            String name = ChatColor.stripColor(rune.getItemMeta().getDisplayName());
+            if (name != null && name.contains("Winter Unity")) {
+                count++;
+            }
+        }
+        return count;
     }
 
     public void equipRune(Player player, ItemStack item) {
@@ -37,6 +67,18 @@ public class RuneManager {
         PlayerData data = plugin.getDatabaseManager().getPlayerData(uuid);
         if (data == null) {
             return;
+        }
+
+        // Validate Winter Unity limit (max 3)
+        if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
+            String itemName = ChatColor.stripColor(item.getItemMeta().getDisplayName());
+            if (itemName != null && itemName.contains("Winter Unity")) {
+                int currentCount = countWinterUnityRunes(data);
+                if (currentCount >= 3) {
+                    player.sendMessage(ChatColor.RED + "You can only equip up to 3 Winter Unity runes.");
+                    return;
+                }
+            }
         }
 
         int unlocked = getUnlockedSlots(player.getLevel());

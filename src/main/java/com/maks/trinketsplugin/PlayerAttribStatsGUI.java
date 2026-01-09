@@ -51,8 +51,16 @@ public class PlayerAttribStatsGUI {
             blockChance = data.getBlockChance();
             blockStrength = data.getBlockStrength();
         }
+        // Also scan player's equipped armor for block stats
+        for (ItemStack armorPiece : player.getInventory().getArmorContents()) {
+            if (armorPiece != null) {
+                int[] armorBlockStats = PlayerData.parseBlockStatsFromItem(armorPiece);
+                blockChance += armorBlockStats[0];
+                blockStrength += armorBlockStats[1];
+            }
+        }
         int setBlockBonus = TrinketsPlugin.getInstance().getSetBonusManager().getBlockChanceBonus(player);
-        int totalBlockChance = blockChance + setBlockBonus;
+        int totalBlockChance = Math.min(blockChance + setBlockBonus, 100); // Capped at 100%
 
         List<String> bcLore = new ArrayList<>();
         bcLore.add(bullet("Base: 0%"));
@@ -80,6 +88,10 @@ public class PlayerAttribStatsGUI {
         protectionLore.add(bullet("Damage Taken: " + formatPercent(protectionStats.finalDamageMultiplier())));
         gui.setItem(21, createItem(Material.ENCHANTED_BOOK, ChatColor.BLUE + "Protection Reduction", protectionLore));
 
+        // Section: Trinkets Stats (custom stats from equipment)
+        gui.setItem(22, createHeader(Material.CYAN_STAINED_GLASS_PANE, ChatColor.DARK_AQUA + "Trinkets Stats"));
+        addTrinketsStats(gui, player, 23);
+
         // Section: Class & Skills
         gui.setItem(27, createHeader(Material.PURPLE_STAINED_GLASS_PANE, ChatColor.LIGHT_PURPLE + "Class & Skills"));
         addMyExperienceStats(gui, player, 28);
@@ -99,6 +111,68 @@ public class PlayerAttribStatsGUI {
         fillEmpty(gui);
 
         player.openInventory(gui);
+    }
+
+    private static void addTrinketsStats(Inventory gui, Player player, int startSlot) {
+        // Evasion Chance (CAPPED at 25%)
+        double rawEvasion = TrinketsStatsAPI.getRawEvasionChance(player);
+        double cappedEvasion = TrinketsStatsAPI.getEvasionChance(player);
+        boolean evasionCapped = rawEvasion > TrinketsStatsAPI.EVASION_CAP;
+
+        List<String> evasionLore = new ArrayList<>();
+        if (evasionCapped) {
+            evasionLore.add(bullet("Raw: " + String.format("%.1f%%", rawEvasion)));
+            evasionLore.add(ChatColor.RED + "  » CAPPED!");
+            evasionLore.add(bullet("Effective: " + String.format("%.1f%%", cappedEvasion)));
+        } else {
+            evasionLore.add(bullet("Value: " + String.format("%.1f%%", cappedEvasion)));
+        }
+        evasionLore.add("");
+        evasionLore.add(ChatColor.GRAY + "Cap: " + ChatColor.YELLOW + String.format("%.0f%%", TrinketsStatsAPI.EVASION_CAP));
+        gui.setItem(startSlot, createItem(Material.PHANTOM_MEMBRANE, ChatColor.AQUA + "Evasion Chance 💨", evasionLore));
+
+        // Armor Penetration (CAPPED at 35%)
+        double rawArmorPen = TrinketsStatsAPI.getRawArmorPenetration(player);
+        double cappedArmorPen = TrinketsStatsAPI.getArmorPenetration(player);
+        boolean armorPenCapped = rawArmorPen > TrinketsStatsAPI.ARMOR_PENETRATION_CAP;
+
+        List<String> armorPenLore = new ArrayList<>();
+        if (armorPenCapped) {
+            armorPenLore.add(bullet("Raw: " + String.format("%.1f%%", rawArmorPen)));
+            armorPenLore.add(ChatColor.RED + "  » CAPPED!");
+            armorPenLore.add(bullet("Effective: " + String.format("%.1f%%", cappedArmorPen)));
+        } else {
+            armorPenLore.add(bullet("Value: " + String.format("%.1f%%", cappedArmorPen)));
+        }
+        armorPenLore.add("");
+        armorPenLore.add(ChatColor.GRAY + "Cap: " + ChatColor.YELLOW + String.format("%.0f%%", TrinketsStatsAPI.ARMOR_PENETRATION_CAP));
+        gui.setItem(startSlot + 1, createItem(Material.IRON_SWORD, ChatColor.DARK_RED + "Armor Penetration 🗡", armorPenLore));
+
+        // Critical Chance (CAPPED at 50%)
+        double rawCritChance = TrinketsStatsAPI.getRawCritChance(player);
+        double cappedCritChance = TrinketsStatsAPI.getCritChance(player);
+        boolean critChanceCapped = rawCritChance > TrinketsStatsAPI.CRITICAL_CHANCE_CAP;
+
+        List<String> critChanceLore = new ArrayList<>();
+        if (critChanceCapped) {
+            critChanceLore.add(bullet("Raw: " + String.format("%.1f%%", rawCritChance)));
+            critChanceLore.add(ChatColor.RED + "  » CAPPED!");
+            critChanceLore.add(bullet("Effective: " + String.format("%.1f%%", cappedCritChance)));
+        } else {
+            critChanceLore.add(bullet("Value: " + String.format("%.1f%%", cappedCritChance)));
+        }
+        critChanceLore.add("");
+        critChanceLore.add(ChatColor.GRAY + "Cap: " + ChatColor.YELLOW + String.format("%.0f%%", TrinketsStatsAPI.CRITICAL_CHANCE_CAP));
+        critChanceLore.add(ChatColor.DARK_GRAY + "(Bonus from trinkets/armor)");
+        gui.setItem(startSlot + 2, createItem(Material.TARGET, ChatColor.RED + "Critical Chance 🎯", critChanceLore));
+
+        // Critical Damage (NO CAP)
+        double critDamage = TrinketsStatsAPI.getCritDamage(player);
+        List<String> critDamageLore = new ArrayList<>();
+        critDamageLore.add(bullet("Bonus: +" + String.format("%.1f%%", critDamage)));
+        critDamageLore.add("");
+        critDamageLore.add(ChatColor.DARK_GRAY + "(Adds to base 200% crit)");
+        gui.setItem(startSlot + 3, createItem(Material.TNT, ChatColor.RED + "Critical Damage 💥", critDamageLore));
     }
 
     private static void addMyExperienceStats(Inventory gui, Player player, int slot) {
@@ -153,11 +227,29 @@ public class PlayerAttribStatsGUI {
                 }
             } catch (Exception ignored) { }
 
+            // Get abyssal bonuses
+            double abyssalCritChance = getAbyssalStat(player, "CRIT_CHANCE_PCT");
+            double abyssalCritDmg = getAbyssalStat(player, "CRIT_DMG_PCT");
+
             List<String> lore = new ArrayList<>();
             lore.add(ChatColor.GRAY + "Class: " + ChatColor.WHITE + playerClass);
             lore.add(ChatColor.GRAY + "Ascendancy: " + ChatColor.WHITE + ascendancy);
-            lore.add(ChatColor.GRAY + "Crit Chance: " + ChatColor.WHITE + String.format("%.1f%%", critChance));
-            lore.add(ChatColor.GRAY + "Crit Damage: " + ChatColor.WHITE + String.format("%.2fx", critMult));
+
+            // Crit Chance with abyssal
+            String critLine = ChatColor.GRAY + "Crit Chance: " + ChatColor.WHITE + String.format("%.1f%%", critChance);
+            if (abyssalCritChance > 0) {
+                critLine += ChatColor.DARK_PURPLE + " (+" + String.format("%.1f%%", abyssalCritChance) + " Abyssal)";
+            }
+            lore.add(critLine);
+
+            // Crit Damage with abyssal
+            String critDmgLine = ChatColor.GRAY + "Crit Damage: " + ChatColor.WHITE + String.format("%.2fx", critMult);
+            if (abyssalCritDmg > 0) {
+                double addedMult = abyssalCritDmg / 100.0;
+                critDmgLine += ChatColor.DARK_PURPLE + " (+" + String.format("%.2fx", addedMult) + " Abyssal)";
+            }
+            lore.add(critDmgLine);
+
             lore.add(ChatColor.GRAY + "Damage Mult.: " + ChatColor.WHITE + String.format("%.2fx", dmgMult));
             lore.add(ChatColor.GRAY + "Evade: " + ChatColor.WHITE + String.format("%.1f%%", evade));
             lore.add(ChatColor.GRAY + "Shield Block: " + ChatColor.WHITE + String.format("%.1f%%", shieldBlock));
@@ -362,14 +454,51 @@ public class PlayerAttribStatsGUI {
         double bonus = value - base;
 
         List<String> lore = new ArrayList<>();
-        if (percentFormat) {
-            lore.add(bullet("Base: " + formatPercent(base)));
-            lore.add(bullet("+Bonus: " + formatPercent(bonus)));
-            lore.add(bullet("Total: " + formatPercent(value)));
+
+        // Special handling for Luck with soft-cap
+        if (attribute == Attribute.GENERIC_LUCK) {
+            TrinketsStatsAPI.LuckBreakdown breakdown = TrinketsStatsAPI.getLuckBreakdown(player);
+
+            lore.add(bullet("Base: " + formatNumber(breakdown.baseValue)));
+            lore.add(bullet("Flat Bonus: " + formatNumber(breakdown.rawFlatBonus)));
+
+            // Show soft-cap reduction if applicable
+            if (breakdown.rawFlatBonus > 30.0) {
+                double reduction = breakdown.rawFlatBonus - breakdown.effectiveFlatBonus;
+                lore.add(ChatColor.YELLOW + "  » Soft-cap (30+): -" + formatNumber(reduction));
+                lore.add(bullet("Effective Flat: " + formatNumber(breakdown.effectiveFlatBonus)));
+            }
+
+            // Show scalar multiplier if present
+            if (breakdown.scalarMultiplier > 0) {
+                lore.add(bullet("Scalar Bonus: +" + formatPercent(breakdown.scalarMultiplier)));
+            }
+
+            lore.add(ChatColor.GREEN + "  ━━━━━━━━━━━━━━");
+            lore.add(ChatColor.AQUA + "  ⚡ Effective: " + ChatColor.WHITE + formatNumber(breakdown.effectiveLuck));
+
+            // Add soft-cap explanation
+            lore.add("");
+            lore.add(ChatColor.GRAY + "Soft-cap: Luck above 30");
+            lore.add(ChatColor.GRAY + "counts as 10% (0.1)");
+
+            // Add abyssal bonuses for Luck
+            double abyssalLuck = getAbyssalStat(player, "LUCK_ADD");
+            if (abyssalLuck > 0) {
+                lore.add("");
+                lore.add(ChatColor.DARK_PURPLE + "  +Abyssal: " + formatNumber(abyssalLuck));
+            }
         } else {
-            lore.add(bullet("Base: " + formatNumber(base)));
-            lore.add(bullet("+Bonus: " + formatNumber(bonus)));
-            lore.add(bullet("Total: " + formatNumber(value)));
+            // Standard attribute display
+            if (percentFormat) {
+                lore.add(bullet("Base: " + formatPercent(base)));
+                lore.add(bullet("+Bonus: " + formatPercent(bonus)));
+                lore.add(bullet("Total: " + formatPercent(value)));
+            } else {
+                lore.add(bullet("Base: " + formatNumber(base)));
+                lore.add(bullet("+Bonus: " + formatNumber(bonus)));
+                lore.add(bullet("Total: " + formatNumber(value)));
+            }
         }
 
         gui.setItem(slot, createItem(material, name, lore));
@@ -408,6 +537,74 @@ public class PlayerAttribStatsGUI {
 
     private static String bullet(String text) {
         return ChatColor.GRAY + "• " + ChatColor.WHITE + text;
+    }
+
+    private static double getAbyssalStat(Player player, String statType) {
+        try {
+            org.bukkit.plugin.Plugin plug = Bukkit.getPluginManager().getPlugin("ScientistPlugin");
+            if (plug == null) return 0.0;
+
+            double total = 0.0;
+
+            // Check all equipment slots
+            org.bukkit.inventory.ItemStack[] items = new org.bukkit.inventory.ItemStack[]{
+                    player.getInventory().getItemInMainHand(),
+                    player.getInventory().getHelmet(),
+                    player.getInventory().getChestplate(),
+                    player.getInventory().getLeggings(),
+                    player.getInventory().getBoots()
+            };
+
+            for (org.bukkit.inventory.ItemStack item : items) {
+                total += getAbyssalStatFromItem(item, statType);
+            }
+
+            // Check trinkets
+            PlayerData data = TrinketsPlugin.getInstance().getDatabaseManager().getPlayerData(player.getUniqueId());
+            if (data != null) {
+                // Try to get trinket slots via reflection
+                try {
+                    java.lang.reflect.Field slotsField = data.getClass().getDeclaredField("slots");
+                    slotsField.setAccessible(true);
+                    @SuppressWarnings("unchecked")
+                    java.util.Map<String, org.bukkit.inventory.ItemStack> slots =
+                        (java.util.Map<String, org.bukkit.inventory.ItemStack>) slotsField.get(data);
+
+                    if (slots != null) {
+                        for (org.bukkit.inventory.ItemStack trinket : slots.values()) {
+                            total += getAbyssalStatFromItem(trinket, statType);
+                        }
+                    }
+                } catch (Exception ignored) {}
+            }
+
+            return total;
+        } catch (Throwable ignored) {
+            return 0.0;
+        }
+    }
+
+    private static double getAbyssalStatFromItem(org.bukkit.inventory.ItemStack item, String statType) {
+        if (item == null || !item.hasItemMeta()) return 0.0;
+        try {
+            org.bukkit.persistence.PersistentDataContainer pdc = item.getItemMeta().getPersistentDataContainer();
+            org.bukkit.NamespacedKey key = new org.bukkit.NamespacedKey("scientistplugin", "abyssal");
+            if (!pdc.has(key, org.bukkit.persistence.PersistentDataType.STRING)) return 0.0;
+
+            String json = pdc.get(key, org.bukkit.persistence.PersistentDataType.STRING);
+            if (json == null || json.isEmpty()) return 0.0;
+
+            com.google.gson.JsonObject obj = new com.google.gson.JsonParser().parse(json).getAsJsonObject();
+
+            // Check if this mod matches the stat type we're looking for
+            String type = obj.has("type") ? obj.get("type").getAsString() : null;
+            if (type == null || !type.equals(statType)) return 0.0;
+
+            double value = obj.has("value") ? obj.get("value").getAsDouble() : 0.0;
+            return value;
+        } catch (Exception ignored) {
+            return 0.0;
+        }
     }
 
     private static void fillEmpty(Inventory gui) {

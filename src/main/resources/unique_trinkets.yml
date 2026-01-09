@@ -176,3 +176,197 @@ boss_heart_of_zeus_t1:
     Unbreakable: true
   Hide:
     - ATTRIBUTES
+
+# Full Moon Special
+crystallized_curse_shard:
+  Id: PRISMARINE_SHARD
+  Display: '&eCrystallized Curse Shard'
+  Group: full_moon_special
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '§7Health: §c+50 ❤'
+    - '§7Damage: §c+200 ⚔'
+    - '&lRarity:&r &e&lUnique'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Attributes:
+    All:
+      Health: 50 ADD
+      Damage: 200 ADD
+
+crystallized_curse_shard_t2:
+  Id: PRISMARINE_SHARD
+  Display: '&5Superior Crystallized Curse Shard'
+  Group: full_moon_special
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '§7Health: §c+100 ❤'
+    - '§7Damage: §c+400 ⚔'
+    - '&lRarity:&r &e&lUnique'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Attributes:
+    All:
+      Health: 100 ADD
+      Damage: 400 ADD
+
+# New Moon Special
+black_lord_shard:
+  Id: brown_dye
+  Display: '&0The Heart of the Black Lord Malachai'
+  Group: new_moon_special
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '§7Health: §c-25% ❤'
+    - '§7Damage: §c+25% ⚔'
+    - '&lRarity:&r &e&lUnique'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Attributes:
+    All:
+      Health: -0.25 ADD_SCALAR
+      Damage: 0.25 ADD_SCALAR
+
+black_lord_shard_t2:
+  Id: brown_dye
+  Display: '&0&lSuperior Heart of the Black Lord Malachai'
+  Group: new_moon_special
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '§7Health: §c-35% ❤'
+    - '§7Damage: §c+35% ⚔'
+    - '&lRarity:&r &e&lUnique'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Attributes:
+    All:
+      Health: -0.35 ADD_SCALAR
+      Damage: 0.35 ADD_SCALAR
+
+white_lord_shard:
+  Id: white_dye
+  Display: '&fThe Heart of the White Lord Silvanus'
+  Group: new_moon_special
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '§7Health: §c+25% ❤'
+    - '§7Damage: §c-25% ⚔'
+    - '&lRarity:&r &e&lUnique'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Attributes:
+    All:
+      Health: 0.25 ADD_SCALAR
+      Damage: -0.25 ADD_SCALAR
+
+white_lord_shard_t2:
+  Id: white_dye
+  Display: '&f&lSuperior Heart of the White Lord Silvanus'
+  Group: new_moon_special
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '§7Health: §c+35% ❤'
+    - '§7Damage: §c-35% ⚔'
+    - '&lRarity:&r &e&lUnique'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Attributes:
+    All:
+      Health: 0.35 ADD_SCALAR
+      Damage: -0.35 ADD_SCALAR
+
+# Winter Trinkets
+sack_of_gifts:
+  Id: bone_meal
+  Display: '&c&lSack of Gifts'
+  Group: holiday_special
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '§7Luck: §a+15 ☘'
+    - '&lRarity:&r &e&lUnique'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Attributes:
+    All:
+      Luck: 15 ADD
+
+sack_of_gifts_t2:
+  Id: bone_meal
+  Display: '&c&lSuperior Sack of Gifts'
+  Group: holiday_special
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '§7Luck: §a+30 ☘'
+    - '&lRarity:&r &e&lUnique'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Attributes:
+    All:
+      Luck: 30 ADD
+
+# Boss Souls
+gluttonous_bear_soul:
+  Id: DRAGON_BREATH
+  Display: '&6🍪 Gluttonous Bear''s Soul'
+  Group: Souls
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '&6Grants Powerful Buff to ...'
+    - '&e&oA soul stuffed with sweets and honey.'
+    - '&8-------------------'
+    - '&aRequired Level: &6 75'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+
+krampus_soul:
+  Id: DRAGON_BREATH
+  Display: '&4🎁 Krampus''s Spirit of Christmas Soul'
+  Group: Souls
+  Enchantments:
+    - DURABILITY:10
+  Lore:
+    - ''
+    - '&6Grants Powerful Buff to ...'
+    - '&8&oA soul that haunts the naughty during winter.'
+    - '&8-------------------'
+    - '&aRequired Level: &6 75'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true

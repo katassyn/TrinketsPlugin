@@ -214,6 +214,17 @@ public class AugmenterListener implements Listener {
         newLore.add("");
         for (String line : baseLore) {
             String stripped = ChatColor.stripColor(line);
+            String lowerStripped = stripped.toLowerCase();
+            // Skip lines that shouldn't be modified by quality (Required Level, Rarity, Set bonuses, etc.)
+            if (lowerStripped.contains("required level") ||
+                lowerStripped.contains("rarity") ||
+                lowerStripped.contains("imprinted set") ||
+                stripped.contains("[") ||  // Any line with brackets [2], [III], [ T5 ], etc.
+                lowerStripped.contains("passive") ||
+                lowerStripped.contains("set:")) {
+                newLore.add(line);
+                continue;
+            }
             double number = 0.0;
             try {
                 java.util.regex.Matcher m = java.util.regex.Pattern.compile("(-?\\d+(?:\\.\\d+)?)").matcher(stripped);

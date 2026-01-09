@@ -14,6 +14,9 @@ public class SetBonusManager {
     private final Map<SetType, List<SetBonus>> setBonuses;
     private final TrinketsPlugin plugin;
     private final Map<UUID, Integer> playerBlockChanceBonuses = new HashMap<>();
+    private final Map<UUID, Integer> playerCritChanceBonuses = new HashMap<>();
+    // Track previous active bonuses to detect changes
+    private final Map<UUID, Map<SetType, Set<Integer>>> previousActiveBonuses = new HashMap<>();
 
     public SetBonusManager(TrinketsPlugin plugin) {
         this.plugin = plugin;
@@ -69,6 +72,46 @@ public class SetBonusManager {
         titanSupremacy6.addPercentageBonus(Attribute.GENERIC_ATTACK_DAMAGE, 3);
         titanSupremacy6.addPercentageBonus(Attribute.GENERIC_LUCK, 3);
         setBonuses.computeIfAbsent(SetType.TITAN_SUPREMACY, k -> new ArrayList<>()).add(titanSupremacy6);
+
+        // White Frost T5 Set (2 and 4 pieces)
+        SetBonus whiteFrostT5_2 = new SetBonus(SetType.WHITE_FROST_T5, 2);
+        whiteFrostT5_2.addPercentageBonus(Attribute.GENERIC_MAX_HEALTH, 10); // +10% Health
+        whiteFrostT5_2.addFlatBonus(Attribute.GENERIC_ARMOR, 10); // +10 Armor
+        setBonuses.computeIfAbsent(SetType.WHITE_FROST_T5, k -> new ArrayList<>()).add(whiteFrostT5_2);
+
+        SetBonus whiteFrostT5_4 = new SetBonus(SetType.WHITE_FROST_T5, 4);
+        // [4] piece has no additional stat bonuses - only passive effect
+        setBonuses.computeIfAbsent(SetType.WHITE_FROST_T5, k -> new ArrayList<>()).add(whiteFrostT5_4);
+
+        // Black Frost T5 Set (2 and 4 pieces)
+        SetBonus blackFrostT5_2 = new SetBonus(SetType.BLACK_FROST_T5, 2);
+        blackFrostT5_2.addPercentageBonus(Attribute.GENERIC_ATTACK_DAMAGE, 10); // +10% Damage
+        blackFrostT5_2.addPercentageBonus(Attribute.GENERIC_ATTACK_SPEED, 10); // +10% Attack Speed
+        setBonuses.computeIfAbsent(SetType.BLACK_FROST_T5, k -> new ArrayList<>()).add(blackFrostT5_2);
+
+        SetBonus blackFrostT5_4 = new SetBonus(SetType.BLACK_FROST_T5, 4);
+        // [4] piece has no additional stat bonuses - only passive effect
+        setBonuses.computeIfAbsent(SetType.BLACK_FROST_T5, k -> new ArrayList<>()).add(blackFrostT5_4);
+
+        // White Frost T3 Set (2 and 4 pieces)
+        SetBonus whiteFrostT3_2 = new SetBonus(SetType.WHITE_FROST_T3, 2);
+        whiteFrostT3_2.addFlatBonus(Attribute.GENERIC_MAX_HEALTH, 50); // +50 Health
+        whiteFrostT3_2.addPercentageBonus(Attribute.GENERIC_KNOCKBACK_RESISTANCE, 10); // +10% Knockback Resist
+        setBonuses.computeIfAbsent(SetType.WHITE_FROST_T3, k -> new ArrayList<>()).add(whiteFrostT3_2);
+
+        SetBonus whiteFrostT3_4 = new SetBonus(SetType.WHITE_FROST_T3, 4);
+        // [4] piece has no additional stat bonuses - only passive effect
+        setBonuses.computeIfAbsent(SetType.WHITE_FROST_T3, k -> new ArrayList<>()).add(whiteFrostT3_4);
+
+        // Black Frost T3 Set (2 and 4 pieces)
+        SetBonus blackFrostT3_2 = new SetBonus(SetType.BLACK_FROST_T3, 2);
+        blackFrostT3_2.addFlatBonus(Attribute.GENERIC_ATTACK_DAMAGE, 40); // +40 Damage
+        setBonuses.computeIfAbsent(SetType.BLACK_FROST_T3, k -> new ArrayList<>()).add(blackFrostT3_2);
+
+        SetBonus blackFrostT3_4 = new SetBonus(SetType.BLACK_FROST_T3, 4);
+        // [4] piece has no additional stat bonuses - only passive effect
+        // NOTE: +5% Crit Chance will be tracked separately
+        setBonuses.computeIfAbsent(SetType.BLACK_FROST_T3, k -> new ArrayList<>()).add(blackFrostT3_4);
     }
 
     public void updatePlayerSetBonuses(Player player, PlayerData playerData) {
@@ -86,6 +129,10 @@ public class SetBonusManager {
             }
         }
 
+        // Track current active bonuses
+        Map<SetType, Set<Integer>> currentActiveBonuses = new HashMap<>();
+        UUID playerId = player.getUniqueId();
+
         // Apply eligible set bonuses
         for (Map.Entry<SetType, Integer> entry : setPieceCounts.entrySet()) {
             SetType setType = entry.getKey();
@@ -97,9 +144,9 @@ public class SetBonusManager {
                     if (equippedPieces >= bonus.getRequiredPieces()) {
                         applySetBonus(player, bonus);
 
-                        // Send message to player about active bonus
-                        player.sendMessage(ChatColor.GREEN + "[Set Bonus Active] " + ChatColor.YELLOW +
-                                setType.getDisplayName() + " (" + bonus.getRequiredPieces() + " pieces)");
+                        // Track this active bonus
+                        currentActiveBonuses.computeIfAbsent(setType, k -> new HashSet<>())
+                            .add(bonus.getRequiredPieces());
                     }
                 }
             }
@@ -108,7 +155,18 @@ public class SetBonusManager {
             if (setType == SetType.AEGIS_PROTECTION && equippedPieces >= 1) {
                 playerBlockChanceBonuses.put(player.getUniqueId(), 10);
             }
+
+            // Handle Black Frost T3 Crit Chance bonus
+            if (setType == SetType.BLACK_FROST_T3 && equippedPieces >= 2) {
+                playerCritChanceBonuses.put(player.getUniqueId(), 5); // +5% Crit
+            }
         }
+
+        // Compare with previous state and notify only on meaningful changes
+        notifyBonusChanges(player, currentActiveBonuses);
+
+        // Store current state for next comparison
+        previousActiveBonuses.put(playerId, currentActiveBonuses);
     }
 
     private Map<SetType, Integer> countAllSetPieces(Player player, PlayerData playerData) {
@@ -204,6 +262,8 @@ public class SetBonusManager {
         }
         // Clear block chance bonus
         playerBlockChanceBonuses.remove(player.getUniqueId());
+        // Clear crit chance bonus
+        playerCritChanceBonuses.remove(player.getUniqueId());
     }
 
     public int getSetPieceCount(Player player, SetType setType) {
@@ -220,5 +280,49 @@ public class SetBonusManager {
 
     public int getBlockChanceBonus(Player player) {
         return playerBlockChanceBonuses.getOrDefault(player.getUniqueId(), 0);
+    }
+
+    public int getCritChanceBonus(Player player) {
+        return playerCritChanceBonuses.getOrDefault(player.getUniqueId(), 0);
+    }
+
+    private void notifyBonusChanges(Player player, Map<SetType, Set<Integer>> currentBonuses) {
+        UUID playerId = player.getUniqueId();
+        Map<SetType, Set<Integer>> previousBonuses = previousActiveBonuses.get(playerId);
+
+        // If no previous state, don't notify (first time equipping)
+        if (previousBonuses == null) {
+            return;
+        }
+
+        // Check for new bonuses or removed bonuses
+        for (Map.Entry<SetType, Set<Integer>> entry : currentBonuses.entrySet()) {
+            SetType setType = entry.getKey();
+            Set<Integer> currentPieces = entry.getValue();
+            Set<Integer> previousPieces = previousBonuses.getOrDefault(setType, new HashSet<>());
+
+            // Find newly activated bonuses
+            for (Integer pieces : currentPieces) {
+                if (!previousPieces.contains(pieces)) {
+                    player.sendMessage(ChatColor.GREEN + "✓ Set Bonus Activated: " + ChatColor.YELLOW +
+                            setType.getDisplayName() + " [" + pieces + " pieces]");
+                }
+            }
+        }
+
+        // Check for deactivated bonuses
+        for (Map.Entry<SetType, Set<Integer>> entry : previousBonuses.entrySet()) {
+            SetType setType = entry.getKey();
+            Set<Integer> previousPieces = entry.getValue();
+            Set<Integer> currentPieces = currentBonuses.getOrDefault(setType, new HashSet<>());
+
+            // Find deactivated bonuses
+            for (Integer pieces : previousPieces) {
+                if (!currentPieces.contains(pieces)) {
+                    player.sendMessage(ChatColor.RED + "✗ Set Bonus Deactivated: " + ChatColor.GRAY +
+                            setType.getDisplayName() + " [" + pieces + " pieces]");
+                }
+            }
+        }
     }
 }

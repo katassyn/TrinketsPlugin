@@ -5,8 +5,12 @@ public enum SetType {
     OLYMPIAN_TRINITY("Olympian Trinity"),
     DIVINE_OLYMPUS("Divine Olympus"),
     AEGIS_PROTECTION("Aegis Protection"),
-    TITAN_SUPREMACY("Titan Supremacy");
-    
+    TITAN_SUPREMACY("Titan Supremacy"),
+    WHITE_FROST_T5("Superior White Frost"),
+    BLACK_FROST_T5("Superior Black Frost"),
+    WHITE_FROST_T3("Embrace of White Frost"),
+    BLACK_FROST_T3("Curse of Black Frost");
+
     private final String displayName;
     
     SetType(String displayName) {

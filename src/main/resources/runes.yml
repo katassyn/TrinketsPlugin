@@ -363,3 +363,54 @@ RUNE_BERKANO_III:
   Enchantments:
     - DURABILITY:10
   Group: Runes
+
+RUNE_WINTER_UNITY_I:
+  Id: MINER_POTTERY_SHERD
+  Display: '&9[ I ] &fᚹᛁ Winter Unity'
+  Lore:
+    - '&7Below &a50%&7 HP: gain a &a300&7 barrier for &a8s&7.'
+    - '&7Cooldown: &a30s'
+    - '&7Passive: &a+2%&7 damage and &a4%&7 damage reflect.'
+    - ''
+    - '&8Limit: 3'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Enchantments:
+    - DURABILITY:10
+  Group: Runes
+
+RUNE_WINTER_UNITY_II:
+  Id: MINER_POTTERY_SHERD
+  Display: '&5[ II ] &fᚹᛁ Winter Unity'
+  Lore:
+    - '&7Below &a50%&7 HP: gain a &a400&7 barrier for &a8s&7.'
+    - '&7Cooldown: &a30s'
+    - '&7Passive: &a+3%&7 damage and &a6%&7 damage reflect.'
+    - ''
+    - '&8Limit: 3'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Enchantments:
+    - DURABILITY:10
+  Group: Runes
+
+RUNE_WINTER_UNITY_III:
+  Id: MINER_POTTERY_SHERD
+  Display: '&6[ III ] &fᚹᛁ Winter Unity'
+  Lore:
+    - '&7Below &a50%&7 HP: gain a &a500&7 barrier for &a8s&7.'
+    - '&7Cooldown: &a30s'
+    - '&7Passive: &a+5%&7 damage and &a8%&7 damage reflect.'
+    - ''
+    - '&8Limit: 3'
+  Options:
+    HideFlags: true
+    HideAttributes: true
+    Unbreakable: true
+  Enchantments:
+    - DURABILITY:10
+  Group: Runes

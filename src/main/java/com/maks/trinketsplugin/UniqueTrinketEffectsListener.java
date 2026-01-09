@@ -42,13 +42,13 @@ public class UniqueTrinketEffectsListener implements Listener {
     private void processPlayerEffects(Player player) {
         PlayerData data = plugin.getDatabaseManager().getPlayerData(player.getUniqueId());
         if (data == null) return;
-        
+
         // Process Team Relic effects (only if player is party leader)
         ItemStack teamRelic = data.getUniqueTrinket(UniqueTrinketType.TEAM_RELIC);
         if (teamRelic != null && PartyAPIIntegration.isPartyLeader(player)) {
             processTeamRelicEffects(player, teamRelic);
         }
-        
+
         // Process Boss Heart effects
         ItemStack bossHeart = data.getUniqueTrinket(UniqueTrinketType.BOSS_HEART);
         if (bossHeart != null) {

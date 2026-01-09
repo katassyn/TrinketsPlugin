@@ -4,3 +4,11 @@ database:
   name: "minecraft_trinkets"
   user: "root"
   password: "password"
+
+protection-curve:
+  base-level: 16
+  base-reduction: 0.50
+  max-cap: 0.80
+  max-total-level: 800
+  # (1 - baseReduction) * 100 / (100 + kFactor * 784) ~= 0.20 to keep high EPF below 80% reduction
+  k-factor: 0.1913

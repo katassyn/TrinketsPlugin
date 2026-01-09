@@ -62,10 +62,33 @@ public final class ProtectionReductionCalculator {
     }
 
     public static double applyToDamage(Player player, double baseDamage) {
+        return applyToDamage(player, baseDamage, 0.0);
+    }
+
+    /**
+     * Apply damage reduction with armor penetration from attacker.
+     * @param player The player receiving damage
+     * @param baseDamage The base damage
+     * @param armorPenetration Armor penetration percentage (0-100) from attacker's trinkets
+     * @return The reduced damage
+     */
+    public static double applyToDamage(Player player, double baseDamage, double armorPenetration) {
         if (baseDamage <= 0.0) {
             return 0.0;
         }
         ProtectionStats stats = calculate(player);
+
+        // Apply armor penetration - reduces effective protection
+        double penetrationMultiplier = 1.0 - (armorPenetration / 100.0);
+        penetrationMultiplier = Math.max(0.0, Math.min(1.0, penetrationMultiplier)); // Clamp to 0-1
+
+        // Calculate effective final damage multiplier with armor penetration
+        // If attacker has 20% armor pen, they ignore 20% of the protection
+        double effectiveDamageMultiplier = stats.finalDamageMultiplier();
+        double protectionReduction = 1.0 - effectiveDamageMultiplier;
+        double reducedProtectionReduction = protectionReduction * penetrationMultiplier;
+        double effectiveMultiplierWithPen = 1.0 - reducedProtectionReduction;
+
         // The Bukkit damage event already contains the vanilla protection reduction, so we
         // compensate for it here and only apply the additional scaling from the custom curve.
         double vanillaReduction = Math.min(0.80, Math.max(0, stats.totalProtection()) * 0.04);
@@ -73,7 +96,7 @@ public final class ProtectionReductionCalculator {
         if (vanillaMultiplier <= 0.0) {
             return 0.0;
         }
-        double adjustedMultiplier = stats.finalDamageMultiplier() / vanillaMultiplier;
+        double adjustedMultiplier = effectiveMultiplierWithPen / vanillaMultiplier;
         return Math.max(0.0, baseDamage * adjustedMultiplier);
     }
 

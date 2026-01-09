@@ -128,12 +128,14 @@ public class TrinketsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new Q8SoulEffect(this), this);
         getServer().getPluginManager().registerEvents(new Q9SoulEffect(this), this);
         getServer().getPluginManager().registerEvents(new Q10SoulEffect(this), this);
+        getServer().getPluginManager().registerEvents(new KrampusSoulEffect(this), this);
         getServer().getPluginManager().registerEvents(new GemActionsListener(), this);
         getServer().getPluginManager().registerEvents(new ConjurationListener(), this);
         getServer().getPluginManager().registerEvents(new RunicWordEffectsListener(this), this);
         getServer().getPluginManager().registerEvents(new AugmenterListener(), this);
         getServer().getPluginManager().registerEvents(uniqueTrinketEffectsListener, this);
         getServer().getPluginManager().registerEvents(new ArmorChangeListener(this), this);
+        getServer().getPluginManager().registerEvents(new SetBonusEffectsListener(this), this);
 
         // Load data for already logged-in players
         for (Player player : Bukkit.getOnlinePlayers()) {

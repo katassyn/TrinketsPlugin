@@ -62,9 +62,24 @@ public class SoulCommand implements CommandExecutor {
                 sender.sendMessage(ChatColor.YELLOW + " - After 3 hits on a mob: turn it to stone (1s), cd 10s");
                 break;
             case "q10":
-                sender.sendMessage(ChatColor.GOLD + "=== Q10: Gorga’s Abyssal Soul ===");
+                sender.sendMessage(ChatColor.GOLD + "=== Q10: Gorga's Abyssal Soul ===");
                 sender.sendMessage(ChatColor.YELLOW + " - On player hit: Blindness for 3s (cd 5s)");
                 sender.sendMessage(ChatColor.YELLOW + " - When HP < 30%, heal to full +30% dmg for 5s (cd 60s)");
+                break;
+            case "bear":
+            case "gluttonous":
+                sender.sendMessage(ChatColor.GOLD + "=== Gluttonous Bear's Soul ===");
+                sender.sendMessage(ChatColor.YELLOW + " - Thick Layer of Fat (Passive):");
+                sender.sendMessage(ChatColor.YELLOW + "   You cannot take more than 50% of your max HP");
+                sender.sendMessage(ChatColor.YELLOW + "   (including absorption) in a single hit");
+                sender.sendMessage(ChatColor.GRAY + "   Protection against one-shot mechanics");
+                break;
+            case "krampus":
+                sender.sendMessage(ChatColor.GOLD + "=== Krampus's Spirit of Christmas Soul ===");
+                sender.sendMessage(ChatColor.YELLOW + " - Chains of Misery (Offensive AoE):");
+                sender.sendMessage(ChatColor.YELLOW + "   When you hit an enemy, all enemies within");
+                sender.sendMessage(ChatColor.YELLOW + "   5 blocks take the same damage");
+                sender.sendMessage(ChatColor.GRAY + "   Perfect for crowd control");
                 break;
             default:
                 sendHelp(sender);
@@ -74,8 +89,8 @@ public class SoulCommand implements CommandExecutor {
     }
 
     private void sendHelp(CommandSender sender) {
-        sender.sendMessage(ChatColor.AQUA + "Usage: /soul <q1|q2|...|q10>");
-        sender.sendMessage(ChatColor.GRAY + "Example: /soul q3");
+        sender.sendMessage(ChatColor.AQUA + "Usage: /soul <q1|q2|...|q10|bear|krampus>");
+        sender.sendMessage(ChatColor.GRAY + "Example: /soul q3, /soul bear, /soul krampus");
         sender.sendMessage(ChatColor.GREEN + "Check out all boss souls at: " + ChatColor.YELLOW + "https://dsocraft.pl/bossouls.php");
     }
 }

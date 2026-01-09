@@ -70,18 +70,19 @@ public class PlayerInteractListener implements Listener {
         if (!item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
             return false;
         }
-        
+
+        Material material = item.getType();
         String displayName = org.bukkit.ChatColor.stripColor(item.getItemMeta().getDisplayName()).toLowerCase();
-        
+
         // Check for Team Relics
-        if (displayName.contains("team relic of hermes") || 
-            displayName.contains("team relic of apollo") || 
-            displayName.contains("team relic of athena") || 
-            displayName.contains("team relic of ares") || 
+        if (displayName.contains("team relic of hermes") ||
+            displayName.contains("team relic of apollo") ||
+            displayName.contains("team relic of athena") ||
+            displayName.contains("team relic of ares") ||
             displayName.contains("team relic of zeus")) {
             return true;
         }
-        
+
         // Check for Boss Hearts
         if (displayName.contains("heart of olympus") ||
             displayName.contains("heart of kronos") ||
@@ -90,7 +91,31 @@ public class PlayerInteractListener implements Listener {
             displayName.contains("heart of zeus")) {
             return true;
         }
-        
+
+        // Check for Full Moon Trinket (PRISMARINE_SHARD + curse shard name)
+        if (material == Material.PRISMARINE_SHARD && displayName.contains("curse shard")) {
+            return true;
+        }
+
+        // Check for New Moon Trinket - Black Lord (BROWN_DYE + specific name)
+        if (material == Material.BROWN_DYE &&
+            (displayName.contains("heart of the black lord") ||
+             (displayName.contains("black lord") && displayName.contains("malachai")))) {
+            return true;
+        }
+
+        // Check for New Moon Trinket - White Lord (WHITE_DYE + specific name)
+        if (material == Material.WHITE_DYE &&
+            (displayName.contains("heart of the white lord") ||
+             (displayName.contains("white lord") && displayName.contains("silvanus")))) {
+            return true;
+        }
+
+        // Check for Winter Trinket - Sack of Gifts (BONE_MEAL + specific name)
+        if (material == Material.BONE_MEAL && displayName.contains("sack of gifts")) {
+            return true;
+        }
+
         return false;
     }
 
@@ -98,43 +123,58 @@ public class PlayerInteractListener implements Listener {
         if (!item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
             return;
         }
-        
+
+        Material material = item.getType();
         String displayName = org.bukkit.ChatColor.stripColor(item.getItemMeta().getDisplayName()).toLowerCase();
         PlayerData data = TrinketsPlugin.getInstance().getDatabaseManager().getPlayerData(player.getUniqueId());
-        
+
         UniqueTrinketType trinketType = null;
-        
+
         // Determine trinket type
         if (displayName.contains("team relic")) {
             trinketType = UniqueTrinketType.TEAM_RELIC;
         } else if (displayName.contains("heart of")) {
             trinketType = UniqueTrinketType.BOSS_HEART;
+        } else if (material == Material.PRISMARINE_SHARD && displayName.contains("curse shard")) {
+            trinketType = UniqueTrinketType.FULL_MOON_SHARD;
+        } else if (material == Material.BROWN_DYE &&
+                   (displayName.contains("heart of the black lord") ||
+                    (displayName.contains("black lord") && displayName.contains("malachai")))) {
+            trinketType = UniqueTrinketType.NEW_MOON_SHARD;
+        } else if (material == Material.WHITE_DYE &&
+                   (displayName.contains("heart of the white lord") ||
+                    (displayName.contains("white lord") && displayName.contains("silvanus")))) {
+            trinketType = UniqueTrinketType.NEW_MOON_SHARD;
+        } else if (material == Material.BONE_MEAL && displayName.contains("sack of gifts")) {
+            trinketType = UniqueTrinketType.WINTER_TRINKET;
         }
-        
+
         if (trinketType == null) {
             player.sendMessage("§cThis item cannot be equipped!");
             return;
         }
-        
-        // Check for existing trinket and return it to player
+
+        // Prevent equipping stacked unique trinkets to avoid duplication/stacking issues
+        if (item.getAmount() > 1) {
+            player.sendMessage("§cUnique trinkets must be unstacked (amount = 1) before equipping.");
+            return;
+        }
+
+        // Check if slot is already occupied
         ItemStack existing = data.getUniqueTrinket(trinketType);
         if (existing != null) {
-            player.getInventory().addItem(existing);
+            player.sendMessage("§cThis slot is already occupied! Unequip the current trinket first in the Unique Trinkets menu.");
+            return;
         }
         
         // Equip new trinket
         data.setUniqueTrinket(trinketType, item.clone());
         
-        // Apply attributes immediately
+        // Apply attributes immediately (after removing old ones above)
         data.applyUniqueTrinketAttribute(player, item.clone(), trinketType);
         
-        // Remove item from hand
-        ItemStack itemInHand = player.getInventory().getItemInMainHand();
-        if (itemInHand.getAmount() > 1) {
-            itemInHand.setAmount(itemInHand.getAmount() - 1);
-        } else {
-            player.getInventory().setItemInMainHand(null);
-        }
+        // Remove item from hand (amount is guaranteed to be 1 at this point)
+        player.getInventory().setItemInMainHand(null);
         
         // For team relics, check if player is in party and is leader
         if (trinketType == UniqueTrinketType.TEAM_RELIC) {

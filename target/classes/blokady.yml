@@ -165,6 +165,51 @@ items:
     id: furnace_minecart
     display_name: '&6[ III ] &l&cSIGROSMAR`S ETERNAL GRASP'
     lv: 65
-  # gorgonskin_leather_boots_blood z q9_items.yml to buty - pomijam
-  # abyssal_treasure_helmet_blood z q10_items.yml to hełm - pomijam
-
+  silvanus_ring_hard:
+    id: TNT_MINECART
+    display_name: "&c[ H ] &c&lSILVANUS`S HOLY RING"
+    lv: 65
+  malachai_ring_hard:
+    id: HOPPER_MINECART
+    display_name: "&c[ H ] &c&lMALACHAI`S DARK RING"
+    lv: 65
+  krampus_soul:
+    id: DRAGON_BREATH
+    display_name: '&4🎁 Krampus’s Spirit of Christmas Soul'
+    lv: 75
+  gluttonous_bear_soul:
+    id: DRAGON_BREATH
+    display_name: '&6🍪 Gluttonous Bear’s Soul'
+    lv: 75
+  frosted_krampus_chains_hell:
+    id: minecart
+    display_name: '&5[ II ] &eFrosted Krampus Chains'
+    lv: 50
+  honey_glazed_armguards_hell:
+    id: iron_door
+    display_name: '&5[ II ] &eHoney-Glazed Armguards'
+    lv: 50
+  starlight_winter_talisman_hell:
+    id: furnace_minecart
+    display_name: '&5[ II ] &eStarlight Winter Talisman'
+    lv: 50
+  krampus_dark_judgment_ring_blood:
+    id: hopper_minecart
+    display_name: '&6[ III ] &eKrampus` Dark Judgment Ring'
+    lv: 50
+  sweet_toothed_bear_amulet_blood:
+    id: chest_minecart
+    display_name: '&6[ III ] &eSweet-Toothed Bear Amulet'
+    lv: 50
+  winter_solstice_bulwark_blood:
+    id: iron_door
+    display_name: '&6[ III ] &eWinter Solstice Bulwark'
+    lv: 50
+  gourmand_bears_honeyed_claws_blood:
+    id: leather_horse_armor
+    display_name: '&6[ III ] &c&lGOURMAND BEAR`S HONEYED CLAWS'
+    lv: 65
+  krampus_winter_shroud_blood:
+    id: white_banner
+    display_name: '&6[ III ] &c&lKRAMPUS` WINTER SHROUD'
+    lv: 65

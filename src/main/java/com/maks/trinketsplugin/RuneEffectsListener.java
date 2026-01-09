@@ -33,6 +33,7 @@ public class RuneEffectsListener implements Listener {
     private final Map<UUID, Long> berkanoCooldown = new HashMap<>();
     private final Map<UUID, Long> ehwazActiveUntil = new HashMap<>();
     private final Map<UUID, Integer> ehwazReduction = new HashMap<>();
+    private final Map<UUID, Long> winterUnityCooldown = new HashMap<>();
 
     public RuneEffectsListener(TrinketsPlugin plugin) {
         this.plugin = plugin;
@@ -47,6 +48,12 @@ public class RuneEffectsListener implements Listener {
                 int uruzBonus = getRuneEffect(data, "Uruz", 1, 2, 3);
                 if (uruzBonus > 0) {
                     event.setDamage(event.getDamage() * (1 + uruzBonus / 100.0));
+                }
+
+                // Winter Unity damage bonus (passive)
+                int winterUnityDmg = getRuneEffect(data, "Winter Unity", 2, 3, 5);
+                if (winterUnityDmg > 0) {
+                    event.setDamage(event.getDamage() * (1 + winterUnityDmg / 100.0));
                 }
 
                 double laguzHeal = getRuneEffectDouble(data, "Laguz", 0.003, 0.006, 0.01);
@@ -70,6 +77,13 @@ public class RuneEffectsListener implements Listener {
                 int thurisaz = getRuneEffect(data, "Thurisaz", 2, 3, 4);
                 if (thurisaz > 0 && event.getDamager() instanceof LivingEntity attacker) {
                     double reflect = event.getDamage() * thurisaz / 100.0;
+                    attacker.damage(reflect, victim);
+                }
+
+                // Winter Unity reflect (passive)
+                int winterUnityReflect = getRuneEffect(data, "Winter Unity", 4, 6, 8);
+                if (winterUnityReflect > 0 && event.getDamager() instanceof LivingEntity attacker) {
+                    double reflect = event.getDamage() * winterUnityReflect / 100.0;
                     attacker.damage(reflect, victim);
                 }
             }
@@ -121,6 +135,15 @@ public class RuneEffectsListener implements Listener {
             Bukkit.getScheduler().runTaskLater(plugin, () ->
                     player.setAbsorptionAmount(Math.max(0, player.getAbsorptionAmount() - shieldValue)), 100L);
             shieldCooldown.put(id, now + 45000);
+        }
+
+        // Winter Unity rune - barrier below 50% HP
+        int winterUnityValue = getRuneEffect(data, "Winter Unity", 300, 400, 500);
+        if (winterUnityValue > 0 && healthAfter <= max * 0.5 && now >= winterUnityCooldown.getOrDefault(id, 0L)) {
+            player.setAbsorptionAmount(player.getAbsorptionAmount() + winterUnityValue);
+            Bukkit.getScheduler().runTaskLater(plugin, () ->
+                    player.setAbsorptionAmount(Math.max(0, player.getAbsorptionAmount() - winterUnityValue)), 160L); // 8 seconds
+            winterUnityCooldown.put(id, now + 30000); // 30s cooldown
         }
 
         // Berkano rune
