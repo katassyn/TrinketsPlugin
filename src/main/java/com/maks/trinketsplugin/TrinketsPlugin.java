@@ -129,6 +129,12 @@ public class TrinketsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new Q9SoulEffect(this), this);
         getServer().getPluginManager().registerEvents(new Q10SoulEffect(this), this);
         getServer().getPluginManager().registerEvents(new KrampusSoulEffect(this), this);
+        // Demon Tower Boss Souls
+        getServer().getPluginManager().registerEvents(new ValgrothSoulEffect(this), this);
+        getServer().getPluginManager().registerEvents(new AzhramorthSoulEffect(this), this);
+        getServer().getPluginManager().registerEvents(new KorthamothSoulEffect(this), this);
+        getServer().getPluginManager().registerEvents(new VharzhulSoulEffect(this), this);
+        getServer().getPluginManager().registerEvents(new AcheronSoulEffect(this), this);
         getServer().getPluginManager().registerEvents(new GemActionsListener(), this);
         getServer().getPluginManager().registerEvents(new ConjurationListener(), this);
         getServer().getPluginManager().registerEvents(new RunicWordEffectsListener(this), this);
